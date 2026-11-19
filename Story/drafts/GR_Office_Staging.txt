@@ -1,0 +1,161 @@
+// SUPERSEDED (2026-11-17): merged into Story/RawFiles/Goals/GR_Letters.txt, region "Step 2". Kept for reference only.
+// Staging for step 2: play the office evening in Gortash's real office.
+// To use: build the split dialogs (python tools/build_dialogs.py --staged), then replace
+// the "Step 2" region of GR_Letters.txt with the region below, build in the Story Editor,
+// and raise the mod version in Data/Mods/<mod>/meta.lsx before packing.
+//
+// Flow
+//   1. Closing the invitation letter starts GR_Office_Invitation (L0 to L3, no Gortash on
+//      screen). "Tonight" (L1) sets GR_Office_Visited. "Not tonight" sets nothing.
+//   2. When that dialog ends with GR_Office_Visited set: fade to black, Gortash is moved
+//      to his place in the office, the party is moved to the office debug teleport point.
+//   3. When both have arrived: GR_Office_Evening starts (N1 onwards), the fade clears.
+//   4. When the evening ends: fade to black; if Gortash had already left for the Morphic
+//      Pool, he is sent back there; the fade clears with the party still in the office
+//      ("you leave his office late at night").
+//
+// Base game objects used (all found in Act3_WYR_KillDirectorGortash.txt / DebugItem_Dev.txt):
+//   S_WYR_GortashsPositionInOffice_fff3874c...   where the game puts Gortash in his office
+//   S_Debug_Teleport_WYR_GortashsOffice_4734d350... Larian's debug teleport into the office
+//   S_END_MorphicGortashPoint_6bf2ed03...         where an allied Gortash waits afterwards
+//   WYR_KillDirectorGortash_Event_TeleportedToUndercity_9914f986... set once he has gone
+// Calls, as the game uses them: PROC_TeleportPartiesTo(trigger, event) -> EntityEvent(char,
+// event) on arrival; TeleportTo(char, trigger, event); ScreenFadeTo(char, secs, 0, id) ->
+// ScreenFadeDone(char, id); ClearScreenFade(char, secs, id); LookFromTrigger(char, trigger, 0).
+//
+// Risks to check in game
+//   - If the player has not agreed to meet in the Undercity yet, Gortash is still in his
+//     office and the base game may start its own office dialog when he spots the party.
+//     Ours starts on arrival and should take Gortash first; to watch.
+//   - The party teleport may play a loading screen if the letter is read in another level
+//     (camp). PROC_TeleportPartiesTo uses TeleportPartiesWithMovie, which handles that.
+//   - If anything fails, DB_GR_OfficeStaging stays set: the console can start the evening
+//     with Osi.QRY_StartDialog (see the README).
+
+//REGION Step 2 - office evening, staged in Gortash's office
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_04f0d615-092d-418a-95a4-358a2e3ea0c1
+THEN
+DB_NOOP(1);
+
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_F_6c1d0f3e-5b7a-4e21-9a44-1f0b7d2c8e51
+THEN
+DB_NOOP(1);
+
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_NB_b2e4a9d7-3c58-4f06-8d1a-7e9c25f4a063
+THEN
+DB_NOOP(1);
+
+// 1. Reading the letter asks whether to go tonight
+IF
+GameBookInterfaceClosed(_Item, _Player)
+AND
+GetTemplate(_Item, _Template)
+AND
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+NOT DB_GR_OfficeVisited(1)
+AND
+NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Office_Invitation_e6f9ee37-33c0-5492-9345-7524db848148, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_OfficeInvitationPlayer(_Player);
+
+IF
+FlagSet((FLAG)GR_Office_Visited_94e19093-83bf-57a7-ba98-d02610e40e3e, _, _)
+THEN
+DB_GR_OfficeVisited(1);
+
+// 2. "Tonight": fade out, then move Gortash and the party into the office
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Invitation_e6f9ee37-33c0-5492-9345-7524db848148, _)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+DB_GR_OfficeVisited(1)
+AND
+NOT DB_GR_OfficeStaging(1)
+THEN
+DB_GR_OfficeStaging(1);
+ScreenFadeTo(_Player, 1.5, 0, "GR_Office_FadeOut");
+
+IF
+ScreenFadeDone(_Player, "GR_Office_FadeOut")
+AND
+DB_GR_OfficeStaging(1)
+THEN
+PROC_GR_Office_RememberWhereGortashWas();
+TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_GortashsPositionInOffice_fff3874c-e03b-4802-b0ba-e3584b8ca5ee, "GR_Office_GortashArrived");
+PROC_TeleportPartiesTo((TRIGGER)S_Debug_Teleport_WYR_GortashsOffice_4734d350-a015-47ad-a97c-749c9c0bb477, "GR_Office_PartyArrived");
+
+PROC
+PROC_GR_Office_RememberWhereGortashWas()
+AND
+DB_GlobalFlag(WYR_KillDirectorGortash_Event_TeleportedToUndercity_9914f986-f994-4001-9493-d943cb67e35a)
+THEN
+DB_GR_Office_GortashWasAtMorphicPool(1);
+
+IF
+EntityEvent(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Office_GortashArrived")
+THEN
+LookFromTrigger((CHARACTER)S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_GortashsPositionInOffice_fff3874c-e03b-4802-b0ba-e3584b8ca5ee, 0);
+DB_GR_Office_Arrived("Gortash");
+PROC_GR_Office_TryStartEvening();
+
+IF
+EntityEvent(_Player, "GR_Office_PartyArrived")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+DB_GR_Office_Arrived("Party");
+PROC_GR_Office_TryStartEvening();
+
+// 3. Both are there: play the evening, then clear the fade
+PROC
+PROC_GR_Office_TryStartEvening()
+AND
+DB_GR_Office_Arrived("Gortash")
+AND
+DB_GR_Office_Arrived("Party")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_Office_EveningStarted(1);
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeOut");
+
+// 4. Evening over: fade, send Gortash back if he had left, clear the fade
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, _)
+AND
+DB_GR_Office_EveningStarted(1)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+ScreenFadeTo(_Player, 1.5, 0, "GR_Office_FadeBack");
+
+IF
+ScreenFadeDone(_Player, "GR_Office_FadeBack")
+AND
+DB_GR_Office_GortashWasAtMorphicPool(1)
+THEN
+TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_END_MorphicGortashPoint_6bf2ed03-4bc6-4383-b17a-1b8fc71c8082, "");
+
+IF
+ScreenFadeDone(_Player, "GR_Office_FadeBack")
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeBack");
+NOT DB_GR_OfficeStaging(1);
+//END_REGION

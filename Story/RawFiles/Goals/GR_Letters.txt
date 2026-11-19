@@ -1,0 +1,803 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+// Gortash Romance - delivery of the letters and gifts.
+//
+// Each letter is handed to the player at the first long rest after its
+// trigger. Base game references, found in the game's own story scripts:
+//
+//   WYR_KillDirectorGortash_State_AfterCeremony   set when the coronation dialogue
+//                                                 ends (Act3_WYR_KillDirectorGortash)
+//   EPI_Epilogue_State_PartyGameplayStarted       set when the reunion party starts
+//                                                 (Act3c_EPI_MainEpilogue; Gale, Wyll
+//                                                 and Astarion react to it the same way)
+//   REALLY_DARK_URGE                              Dark Urge tag the game checks on players
+//   FEMALE / IDENTITY_NEUTRAL                     identity tags (used the same way in
+//                                                 Act3b_LOW_OskarsBeloved); MALE is the default
+//   ParentTargetEdge "Act3"                       same parent as Act3_WYR_WyrmRock
+//
+//   Mod items and flags are written as Name_UUID. They are generated
+//   by tools/build_toolkit.py, which also fills them here (--osiris).
+//
+// LongRestFinished, TemplateAddTo, SetFlag, IsTagged and FlagSet are used with
+// the same signatures in the game's scripts. Not compiled yet.
+
+KBSECTION
+
+//REGION Step 1 - invitation letter, after the coronation
+IF
+FlagSet((FLAG)WYR_KillDirectorGortash_State_AfterCeremony_a05a6945-21ad-400d-80bc-7b4934571c57, _, _)
+AND
+NOT DB_GR_Letter_Done("Letter1")
+THEN
+DB_GR_Letter_Pending("Letter1");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Letter1")
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Letter1");
+DB_GR_Letter_Done("Letter1");
+PROC_GR_GiveLetter1(_Player);
+SetFlag((FLAG)GR_Letter1_Delivered_c74aa12f-bcc5-58e3-b976-3a059b1d8f09, _Player);
+
+// One letter per player identity (the French greeting agrees with it).
+// Masculine is the default; the two rules below replace it.
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+THEN
+DB_GR_Letter1_Variant(_Player, "M");
+
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+AND
+IsTagged(_Player, (TAG)FEMALE_3806477c-65a7-4100-9f92-be4c12c4fa4f, 1)
+THEN
+NOT DB_GR_Letter1_Variant(_Player, "M");
+DB_GR_Letter1_Variant(_Player, "F");
+
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+AND
+IsTagged(_Player, (TAG)IDENTITY_NEUTRAL_987da248-4855-40b8-9182-4ff04eb7c13d, 1)
+AND
+DB_GR_Letter1_Variant(_Player, _Old)
+THEN
+NOT DB_GR_Letter1_Variant(_Player, _Old);
+DB_GR_Letter1_Variant(_Player, "NB");
+
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+AND
+DB_GR_Letter1_Variant(_Player, "M")
+THEN
+TemplateAddTo((ITEMROOT)GR_Letter_Invitation_04f0d615-092d-418a-95a4-358a2e3ea0c1, _Player, 1, 1);
+
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+AND
+DB_GR_Letter1_Variant(_Player, "F")
+THEN
+TemplateAddTo((ITEMROOT)GR_Letter_Invitation_F_6c1d0f3e-5b7a-4e21-9a44-1f0b7d2c8e51, _Player, 1, 1);
+
+PROC
+PROC_GR_GiveLetter1((CHARACTER)_Player)
+AND
+DB_GR_Letter1_Variant(_Player, "NB")
+THEN
+TemplateAddTo((ITEMROOT)GR_Letter_Invitation_NB_b2e4a9d7-3c58-4f06-8d1a-7e9c25f4a063, _Player, 1, 1);
+//END_REGION
+
+//REGION Step 2 - office evening, staged in Gortash's office
+// Closing the invitation letter starts GR_Office_Invitation: go tonight, or not.
+// "Not tonight" sets nothing, so reading the letter again offers the choice again.
+// "Tonight" sets GR_Office_Visited: fade to black, Gortash is moved to his place in his
+// office and the player, alone, next to him (from camp, the party first travels to
+// Wyrm's Rock), then
+// GR_Office_Evening plays there with its timeline. Afterwards Gortash goes back to the
+// Morphic Pool if that is where he was; the player stays in the office.
+// Game objects and calls, as Act3_WYR_KillDirectorGortash uses them:
+//   S_WYR_GortashsPositionInOffice, S_Debug_Teleport_WYR_GortashsOffice,
+//   S_END_MorphicGortashPoint, WYR_KillDirectorGortash_Event_TeleportedToUndercity.
+//   ScreenFadeDone gives a user id, not a character: the player comes from our database.
+// The three invitation letters (one per identity). A query rather than an INIT
+// database, so that it also works in saves where this goal was already running.
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_04f0d615-092d-418a-95a4-358a2e3ea0c1
+THEN
+DB_NOOP(1);
+
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_F_6c1d0f3e-5b7a-4e21-9a44-1f0b7d2c8e51
+THEN
+DB_NOOP(1);
+
+QRY
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+_Template == GR_Letter_Invitation_NB_b2e4a9d7-3c58-4f06-8d1a-7e9c25f4a063
+THEN
+DB_NOOP(1);
+
+// 1. Reading the letter asks whether to go tonight
+IF
+GameBookInterfaceClosed(_Item, _Player)
+AND
+GetTemplate(_Item, _Template)
+AND
+QRY_GR_IsInvitationLetter((ROOT)_Template)
+AND
+NOT DB_GR_OfficeVisited(1)
+AND
+NOT DB_GR_OfficeStaging(1)
+AND
+NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Office_Invitation_e6f9ee37-33c0-5492-9345-7524db848148, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_OfficeInvitationPlayer(_Player);
+
+IF
+FlagSet((FLAG)GR_Office_Visited_94e19093-83bf-57a7-ba98-d02610e40e3e, _, _)
+THEN
+DB_GR_OfficeVisited(1);
+
+// "Not tonight"
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Invitation_e6f9ee37-33c0-5492-9345-7524db848148, _)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+NOT DB_GR_OfficeVisited(1)
+THEN
+NOT DB_GR_OfficeInvitationPlayer(_Player);
+
+// 2. "Tonight": fade out, then move Gortash and the party into the office
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Invitation_e6f9ee37-33c0-5492-9345-7524db848148, _)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+DB_GR_OfficeVisited(1)
+AND
+NOT DB_GR_OfficeStaging(1)
+THEN
+DB_GR_OfficeStaging(1);
+ScreenFadeTo(_Player, 1.5, 0, "GR_Office_FadeOut");
+
+IF
+ScreenFadeDone(_, "GR_Office_FadeOut")
+AND
+DB_GR_OfficeStaging(1)
+AND
+NOT DB_GR_Office_Teleporting(1)
+THEN
+DB_GR_Office_Teleporting(1);
+TimerLaunch("GR_Office_Timeout", 20000);
+PROC_GR_Office_Night();
+PROC_GR_Office_RememberWhereGortashWas();
+TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_GortashsPositionInOffice_fff3874c-e03b-4802-b0ba-e3584b8ca5ee, "GR_Office_GortashArrived");
+
+PROC
+PROC_GR_Office_RememberWhereGortashWas()
+AND
+DB_GlobalFlag(WYR_KillDirectorGortash_Event_TeleportedToUndercity_9914f986-f994-4001-9493-d943cb67e35a)
+THEN
+DB_GR_Office_GortashWasAtMorphicPool(1);
+
+IF
+EntityEvent(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Office_GortashArrived")
+AND
+DB_GR_OfficeStaging(1)
+THEN
+// At his desk, reading, his back to the doors (spot read in game, 2026-11-18): the arrival
+// cinematic shows the player coming in behind him. He faces the room again for the evening.
+// ToTransform only takes items: teleport, then turn him like a level trigger that faces the desk
+// (MessHallBodyguard_008_BackupPosition: 101.3 degrees; the desk was read at 101.6).
+TeleportToPosition(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, -17.25, 73.01, 209.75, "GR_Office_GortashAtDesk", 0, 0, 0, 0, 1);
+
+IF
+EntityEvent(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Office_GortashAtDesk")
+AND
+DB_GR_OfficeStaging(1)
+THEN
+// Back to the doors, like the arrival timeline's frame (101.3 degrees). Facing the doors here
+// (the 18/11 test) turned the whole frame by 192 degrees: the player came in from the wrong side.
+LookFromTrigger((CHARACTER)S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_WyrmRock_MessHallBodyguard_008_BackupPosition_5e723858-38af-4efb-8c0b-a104f0fdc246, 0);
+DB_GR_Office_Arrived("Gortash");
+PROC_GR_Office_BringPlayer();
+
+// The player comes alone ("as asked"), right next to Gortash. Same arguments as the game's own
+// single-character teleports: no linked characters, no followers, no summons.
+// (Standing in the corridor in front of the doors made the Steel Watch start a fight, 2026-11-17:
+// the walk through the doors is only shown by the arrival cinematic, the player is really inside.)
+// From another level (camp), the whole party first goes to Wyrm's Rock with a loading screen.
+PROC
+PROC_GR_Office_BringPlayer()
+AND
+DB_CurrentLevel("BGO_Main_A")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+TeleportTo(_Player, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Office_PartyArrived", 0, 1, 1, 0, 1);
+
+PROC
+PROC_GR_Office_BringPlayer()
+AND
+NOT DB_CurrentLevel("BGO_Main_A")
+THEN
+PROC_TeleportPartiesTo((TRIGGER)S_Debug_Teleport_WYR_GortashsOffice_4734d350-a015-47ad-a97c-749c9c0bb477, "GR_Office_LevelArrived");
+
+IF
+EntityEvent(_Player, "GR_Office_LevelArrived")
+AND
+DB_GR_OfficeInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_OfficeStaging(1)
+THEN
+TeleportTo(_Player, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Office_PartyArrived", 0, 1, 1, 0, 1);
+
+// TeleportTo leaves the player about 1.7 m from Gortash; dialog scenes stand at about 1.2 m.
+// Move the player along the line between them to 65 % of that distance (about 1.1 m).
+IF
+EntityEvent(_Player, "GR_Office_PartyArrived")
+AND
+DB_GR_OfficeInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_OfficeStaging(1)
+AND
+GetPosition(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _GX, _GY, _GZ)
+AND
+GetPosition(_Player, _PX, _PY, _PZ)
+AND
+RealSubtract(_PX, _GX, _DX)
+AND
+RealSubtract(_PZ, _GZ, _DZ)
+AND
+RealProduct(_DX, 0.65, _SX)
+AND
+RealProduct(_DZ, 0.65, _SZ)
+AND
+RealSum(_GX, _SX, _NX)
+AND
+RealSum(_GZ, _SZ, _NZ)
+THEN
+TeleportToPosition(_Player, _NX, _PY, _NZ, "GR_Office_PlayerCloser", 0, 0, 0, 0, 1);
+
+IF
+EntityEvent(_Player, "GR_Office_PlayerCloser")
+AND
+DB_GR_OfficeInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_OfficeStaging(1)
+THEN
+DB_GR_Office_Arrived("Party");
+// The arrival timeline is built in Gortash's frame (turned 101.3 degrees). Turning takes time:
+// started right away, the cinematic caught him mid-turn (video, 18/11). Turn him again and wait,
+// under the black screen, before it starts.
+LookFromTrigger((CHARACTER)S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_WyrmRock_MessHallBodyguard_008_BackupPosition_5e723858-38af-4efb-8c0b-a104f0fdc246, 0);
+TimerLaunch("GR_Office_ArrivalDelay", 2500);
+
+IF
+TimerFinished("GR_Office_ArrivalDelay")
+AND
+DB_GR_OfficeInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_OfficeStaging(1)
+THEN
+PROC_GR_Office_TryStartArrival((CHARACTER)_Player);
+
+// The arrival cinematic (GR_Office_Arrival: the player pushes the doors and walks up to him), then
+// the evening. If the cinematic cannot start, the evening starts straight away.
+PROC
+PROC_GR_Office_TryStartArrival((CHARACTER)_Player)
+AND
+DB_GR_Office_Arrived("Gortash")
+AND
+NOT DB_GR_Office_ArrivalPlaying(1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Office_Arrival_0620d73a-ccba-519d-8c77-6a1128c1708e, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_Office_ArrivalPlaying(1);
+ClearScreenFade(_Player, 1.0, "GR_Office_FadeOut");
+
+PROC
+PROC_GR_Office_TryStartArrival((CHARACTER)_Player)
+AND
+NOT DB_GR_Office_ArrivalPlaying(1)
+THEN
+PROC_GR_Office_GortashFacesRoom();
+PROC_GR_Office_TryStartEvening();
+
+// The arrival dialog ends on a "Nested Dialog" node (NE) that plays the evening in the same dialog
+// session: no return to the game between the two (2026-11-18). The game then sends
+// InstanceDialogChanged, not DialogEnded, for the arrival (as Act1_UND_SocietyOfBrilliance reads it),
+// and DialogEnded comes at the very end, with the evening's resource.
+IF
+InstanceDialogChanged(_, (DIALOGRESOURCE)GR_Office_Arrival_0620d73a-ccba-519d-8c77-6a1128c1708e, _, _)
+AND
+DB_GR_Office_ArrivalPlaying(1)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+THEN
+DB_GR_Office_EveningStarted(1);
+
+// Fallback: the arrival ended without handing over (the evening could not start from the nested
+// node): fade, then start the evening from the script as before.
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Arrival_0620d73a-ccba-519d-8c77-6a1128c1708e, _)
+AND
+DB_GR_Office_ArrivalPlaying(1)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+ScreenFadeTo(_Player, 0.3, 0, "GR_Office_ArrivalCut");
+
+IF
+ScreenFadeDone(_, "GR_Office_ArrivalCut")
+AND
+DB_GR_Office_ArrivalPlaying(1)
+THEN
+PROC_GR_Office_GortashFacesRoom();
+PROC_GR_Office_TryStartEvening();
+
+// Same spot, turned towards the doors (GortashAfterCeremonyPos: -91.2 degrees), as in the evening.
+PROC
+PROC_GR_Office_GortashFacesRoom()
+THEN
+LookFromTrigger((CHARACTER)S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_KillDirectorGortash_GortashAfterCeremonyPos_dd449a60-f892-4170-bdef-26f24a5afd84, 0);
+
+// 3. Both are there: play the evening and clear the fade.
+//    If it cannot start (another dialog took Gortash), still clear the fade.
+PROC
+PROC_GR_Office_TryStartEvening()
+AND
+DB_GR_Office_Arrived("Gortash")
+AND
+DB_GR_Office_Arrived("Party")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_Office_EveningStarted(1);
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeOut");
+ClearScreenFade(_Player, 0.6, "GR_Office_ArrivalCut");
+
+PROC
+PROC_GR_Office_TryStartEvening()
+AND
+DB_GR_Office_Arrived("Gortash")
+AND
+DB_GR_Office_Arrived("Party")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeOut");
+ClearScreenFade(_Player, 1.5, "GR_Office_ArrivalCut");
+PROC_GR_Office_Cleanup(_Player);
+
+// Safety: if a teleport never finished, bring the picture back instead of a black screen
+IF
+TimerFinished("GR_Office_Timeout")
+AND
+DB_GR_OfficeStaging(1)
+AND
+NOT DB_GR_Office_EveningStarted(1)
+AND
+NOT DB_GR_Office_ArrivalPlaying(1)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeOut");
+PROC_GR_Office_Cleanup(_Player);
+
+// 4. Evening over: fade, send Gortash back if he had left, clear the fade
+IF
+DialogEnded((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, _)
+AND
+DB_GR_Office_EveningStarted(1)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+ScreenFadeTo(_Player, 1.5, 0, "GR_Office_FadeBack");
+
+IF
+ScreenFadeDone(_, "GR_Office_FadeBack")
+AND
+DB_GR_Office_GortashWasAtMorphicPool(1)
+THEN
+TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_END_MorphicGortashPoint_6bf2ed03-4bc6-4383-b17a-1b8fc71c8082, "");
+
+IF
+ScreenFadeDone(_, "GR_Office_FadeBack")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Office_FadeBack");
+PROC_GR_Office_Cleanup(_Player);
+
+// Night in the office for the evening. The city level has no lighting zone of its own, so the
+// mod adds two around the office's main room (Levels/BGO_Main_A/Triggers: GR_LTN_GortashOffice,
+// GR_ATM_GortashOffice), set to the level's own lighting and atmosphere the rest of the time.
+// Night resources: the ones the farm camp (same level) uses at night.
+PROC
+PROC_GR_Office_Night()
+THEN
+TriggerSetLighting((TRIGGER)GR_LTN_GortashOffice_4694569c-47d1-5eaf-a82f-14a2b9195b00, "b3ca5158-0e0d-e7d0-a108-8cb4b985e331"); // LTN_Default_Night_VUE_A
+TriggerSetAtmosphere((TRIGGER)GR_ATM_GortashOffice_a13e821f-3c0e-5b9f-9bb6-f76f2f030e70, "1b400b27-513d-ebc0-a7d7-2e1872b56b91"); // ATM_Default_Night_VUE_A
+
+PROC
+PROC_GR_Office_Day()
+THEN
+TriggerSetLighting((TRIGGER)GR_LTN_GortashOffice_4694569c-47d1-5eaf-a82f-14a2b9195b00, "1986e8d8-ac72-7bff-64c9-f8538548d505"); // BGO_Main_A level lighting
+TriggerSetAtmosphere((TRIGGER)GR_ATM_GortashOffice_a13e821f-3c0e-5b9f-9bb6-f76f2f030e70, "be77c334-0d95-6d88-6cf7-b55f71d5f1d0"); // BGO_Main_A level atmosphere
+
+PROC
+PROC_GR_Office_Cleanup((CHARACTER)_Player)
+THEN
+PROC_GR_Office_Day();
+NOT DB_GR_OfficeInvitationPlayer(_Player);
+NOT DB_GR_OfficeStaging(1);
+NOT DB_GR_Office_Teleporting(1);
+NOT DB_GR_Office_Arrived("Gortash");
+NOT DB_GR_Office_Arrived("Party");
+NOT DB_GR_Office_EveningStarted(1);
+NOT DB_GR_Office_GortashWasAtMorphicPool(1);
+NOT DB_GR_Office_ArrivalPlaying(1);
+//END_REGION
+
+//REGION Step 3 - ball invitation, after the office scene
+IF
+FlagSet((FLAG)GR_Romance_Interested_37b333a2-d7be-59f9-809a-dd7759564264, _, _)
+AND
+NOT DB_GR_Letter_Done("Card")
+THEN
+DB_GR_Letter_Pending("Card");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Card")
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Card");
+DB_GR_Letter_Done("Card");
+TemplateAddTo((ITEMROOT)GR_Card_Ball_adb0c465-2e66-57cd-b97e-494e2c0b0186, _Player, 1, 1);
+TemplateAddTo((ITEMROOT)GR_Gift_Wine_9755fa0f-4785-5836-9052-7962191206aa, _Player, 1, 1);
+SetFlag((FLAG)GR_Ball_Invited_bb642d72-c815-514d-93f4-6e0fc7deb142, _Player);
+
+// Reading the ball card asks whether to go tonight, like the invitation letter
+IF
+GameBookInterfaceClosed(_Item, _Player)
+AND
+GetTemplate(_Item, _Template)
+AND
+_Template == GR_Card_Ball_adb0c465-2e66-57cd-b97e-494e2c0b0186
+AND
+NOT DB_GR_BallAttended(1)
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Ball_4141ea7e-b5ed-5ceb-92c1-542da3c41b6c, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_NOOP(1);
+
+IF
+FlagSet((FLAG)GR_Ball_Attended_c01bdc75-f8ca-5b69-b37a-be8ae6fbc818, _, _)
+THEN
+DB_GR_BallAttended(1);
+//END_REGION
+
+//REGION Step 4 - second letter, after the ball
+IF
+FlagSet((FLAG)GR_Ball_Attended_c01bdc75-f8ca-5b69-b37a-be8ae6fbc818, _, _)
+AND
+NOT DB_GR_Letter_Done("Letter2")
+AND
+NOT DB_GR_RomanceEnded(1)
+THEN
+DB_GR_Letter_Pending("Letter2");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Letter2")
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Letter2");
+DB_GR_Letter_Done("Letter2");
+TemplateAddTo((ITEMROOT)GR_Letter_Night_6f0efd58-c77e-58b9-8ca6-82fb8324d922, _Player, 1, 1);
+SetFlag((FLAG)GR_Night_Invited_2390e96e-2fe0-5d5f-a764-11fa5eeb83bf, _Player);
+
+// Reading the second letter asks whether to go tonight. The dialog's first node
+// checks GR_Night_Invited and that the romance is neither committed nor ended.
+IF
+GameBookInterfaceClosed(_Item, _Player)
+AND
+GetTemplate(_Item, _Template)
+AND
+_Template == GR_Letter_Night_6f0efd58-c77e-58b9-8ca6-82fb8324d922
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Private_Night_8ff17a3b-6704-5834-a188-8705d9a3d1c4, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_NOOP(1);
+//END_REGION
+
+//REGION Step 5 - epilogue letter, at the reunion party
+IF
+FlagSet((FLAG)GR_Gortash_Saved_a48a9388-a5d7-5301-ae9a-2631ca512607, _, _)
+THEN
+DB_GR_GortashSaved(1);
+
+IF
+FlagSet((FLAG)GR_Left_City_b57a5237-b203-5885-9ea1-ebaf01efcded, _, _)
+THEN
+DB_GR_LeftCity(1);
+
+IF
+FlagSet((FLAG)EPI_Epilogue_State_PartyGameplayStarted_1ff87c8c-a363-45fb-aeb8-762abc69b99e, _, _)
+AND
+DB_GR_GortashSaved(1)
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+NOT DB_GR_LeftCity(1)
+AND
+NOT DB_GR_Letter_Done("Epilogue")
+AND
+GetHostCharacter(_Player)
+THEN
+DB_GR_Letter_Done("Epilogue");
+TemplateAddTo((ITEMROOT)GR_Letter_Epilogue_8cdf9b40-2ad1-55a1-af4f-3db531daac0e, _Player, 1, 1);
+
+IF
+FlagSet((FLAG)EPI_Epilogue_State_PartyGameplayStarted_1ff87c8c-a363-45fb-aeb8-762abc69b99e, _, _)
+AND
+DB_GR_GortashSaved(1)
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+DB_GR_LeftCity(1)
+AND
+NOT DB_GR_Letter_Done("Epilogue")
+AND
+GetHostCharacter(_Player)
+THEN
+DB_GR_Letter_Done("Epilogue");
+TemplateAddTo((ITEMROOT)GR_Letter_Epilogue_Away_72a406c3-c45a-5181-95c7-7d8cb1a5519c, _Player, 1, 1);
+//END_REGION
+
+//REGION Gifts - dance card after the dance, key and knife after the private night
+IF
+FlagSet((FLAG)GR_Ball_Danced_4a2ba283-8865-577d-99b3-699e67224bff, _, _)
+AND
+NOT DB_GR_Letter_Done("Gift2")
+THEN
+DB_GR_Letter_Pending("Gift2");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Gift2")
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Gift2");
+DB_GR_Letter_Done("Gift2");
+TemplateAddTo((ITEMROOT)GR_Gift_DanceCard_8523e550-062b-5744-a87c-41e7a4fbbdf1, _Player, 1, 1);
+
+IF
+FlagSet((FLAG)GR_Romance_Committed_7e443de9-f69d-53e0-86b6-eac3ed8fea0e, _, _)
+AND
+NOT DB_GR_Letter_Done("Gift3")
+THEN
+DB_GR_Letter_Pending("Gift3");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Gift3")
+AND
+GetHostCharacter(_Player)
+AND
+IsTagged(_Player, (TAG)REALLY_DARK_URGE_cd611d7d-b67d-42b4-a75c-a0c6091ef8a2, 1)
+THEN
+TemplateAddTo((ITEMROOT)GR_Gift_Knife_f5147ec9-6100-5d96-b954-d119ee46a528, _Player, 1, 1);
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Gift3")
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Gift3");
+DB_GR_Letter_Done("Gift3");
+TemplateAddTo((ITEMROOT)GR_Gift_Key_8694972c-39c9-5af5-bd06-edd4a56ac528, _Player, 1, 1);
+//END_REGION
+
+//REGION Romance ended - cancel what is waiting, send the breakup letter
+IF
+FlagSet((FLAG)GR_Romance_Ended_ef844af1-aeeb-5134-8758-e4ff90db1331, _, _)
+AND
+NOT DB_GR_RomanceEnded(1)
+THEN
+DB_GR_RomanceEnded(1);
+NOT DB_GR_Letter_Pending("Card");
+NOT DB_GR_Letter_Pending("Letter2");
+NOT DB_GR_Letter_Pending("Gift2");
+NOT DB_GR_Letter_Pending("Gift3");
+DB_GR_Letter_Pending("Breakup");
+
+IF
+FlagSet((FLAG)GR_First_Names_43b26456-b0b9-5c12-9095-de62bb801f55, _, _)
+THEN
+DB_GR_FirstNames(1);
+
+// Before they are on first-name terms: the "vous" version.
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Breakup")
+AND
+NOT DB_GR_FirstNames(1)
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Breakup");
+TemplateAddTo((ITEMROOT)GR_Letter_Breakup1_2cb60840-df36-5200-8a2a-d7fa991008d8, _Player, 1, 1);
+
+// Once they are on first-name terms: the "tu" version.
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Breakup")
+AND
+DB_GR_FirstNames(1)
+AND
+GetHostCharacter(_Player)
+THEN
+NOT DB_GR_Letter_Pending("Breakup");
+TemplateAddTo((ITEMROOT)GR_Letter_Breakup2_544d2b36-440b-59ce-8604-92985322ee72, _Player, 1, 1);
+//END_REGION
+
+//REGION Extension - after Orin, at the first long rest after her death
+// Only if Orin dies after the private night: the scene uses "tu" in French and
+// treats the romance as established. GLO_Orin_State_PermaDefeated is the global
+// flag the game sets on her death (Act3_WYR_KillDirectorGortash, Act3b_LOW_BhaalTemple).
+// Written before the memories, so on the same rest this scene goes first and the
+// memory waits for the next rest.
+IF
+FlagSet((FLAG)GR_Romance_Committed_7e443de9-f69d-53e0-86b6-eac3ed8fea0e, _, _)
+THEN
+DB_GR_RomanceCommitted(1);
+
+IF
+FlagSet((FLAG)GLO_Orin_State_PermaDefeated_c716e4d9-e6ed-445c-a710-ee4d91c67298, _, _)
+AND
+DB_GR_RomanceCommitted(1)
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+NOT DB_GR_Letter_Done("Orin")
+THEN
+DB_GR_Letter_Pending("Orin");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Orin")
+AND
+NOT DB_GR_RomanceEnded(1)
+AND
+NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
+AND
+GetHostCharacter(_Player)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Orin_4d2355e0-e20d-548b-8fbb-002f4ab8e60b, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+NOT DB_GR_Letter_Pending("Orin");
+DB_GR_Letter_Done("Orin");
+//END_REGION
+
+//REGION Extension - Dark Urge memories, narrated at the first long rest after a step
+// One memory per rest, oldest first. Osiris runs the rules of one event in file
+// order, so the rules are written newest first and each waits for the older ones:
+// once memory 1 starts, memories 2 and 3 have already been skipped for this rest.
+// If the dialog cannot start (another one running), the memory waits for the next rest.
+IF
+FlagSet((FLAG)GR_Romance_Interested_37b333a2-d7be-59f9-809a-dd7759564264, _, _)
+AND
+NOT DB_GR_Letter_Done("Memory1")
+THEN
+DB_GR_Letter_Pending("Memory1");
+
+IF
+FlagSet((FLAG)GR_Ball_Attended_c01bdc75-f8ca-5b69-b37a-be8ae6fbc818, _, _)
+AND
+NOT DB_GR_Letter_Done("Memory2")
+THEN
+DB_GR_Letter_Pending("Memory2");
+
+IF
+FlagSet((FLAG)GR_Romance_Committed_7e443de9-f69d-53e0-86b6-eac3ed8fea0e, _, _)
+AND
+NOT DB_GR_Letter_Done("Memory3")
+THEN
+DB_GR_Letter_Pending("Memory3");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Memory3")
+AND
+NOT DB_GR_Letter_Pending("Memory1")
+AND
+NOT DB_GR_Letter_Pending("Memory2")
+AND
+GetHostCharacter(_Player)
+AND
+IsTagged(_Player, (TAG)REALLY_DARK_URGE_cd611d7d-b67d-42b4-a75c-a0c6091ef8a2, 1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Memory_LastMorning_a7083fd1-1376-5d4e-adea-faf596712dce, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+NOT DB_GR_Letter_Pending("Memory3");
+DB_GR_Letter_Done("Memory3");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Memory2")
+AND
+NOT DB_GR_Letter_Pending("Memory1")
+AND
+GetHostCharacter(_Player)
+AND
+IsTagged(_Player, (TAG)REALLY_DARK_URGE_cd611d7d-b67d-42b4-a75c-a0c6091ef8a2, 1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Memory_Rooftop_b772615f-be4f-5b6e-9fce-7b0d5c6ac91a, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+NOT DB_GR_Letter_Pending("Memory2");
+DB_GR_Letter_Done("Memory2");
+
+IF
+LongRestFinished()
+AND
+DB_GR_Letter_Pending("Memory1")
+AND
+GetHostCharacter(_Player)
+AND
+IsTagged(_Player, (TAG)REALLY_DARK_URGE_cd611d7d-b67d-42b4-a75c-a0c6091ef8a2, 1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Memory_FirstMeeting_07875786-2825-58af-ba35-1d031c7a3fd9, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+NOT DB_GR_Letter_Pending("Memory1");
+DB_GR_Letter_Done("Memory1");
+//END_REGION
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Act3"

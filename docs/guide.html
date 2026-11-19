@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Romance Gortash - Guide de la suite</title>
+<style>
+  @page { size: A4; margin: 16mm 18mm 17mm 18mm; }
+  :root { --ink:#1d1a16; --soft:#5d564c; --gold:#a8782a; --gold-soft:#f4ead6; --line:#e2d9c8; --paper:#fffdf8; --warn:#8c3b2a; --warn-soft:#f8e9e4; }
+  * { box-sizing: border-box; }
+  html { font-size: 9.2pt; }
+  .keep { break-inside: avoid; }
+  body { margin:0; font-family: Inter, "DejaVu Sans", sans-serif; color: var(--ink); line-height: 1.5; background: var(--paper); }
+  h1, h2, h3 { font-family: Caladea, "Bitstream Charter", Georgia, serif; line-height: 1.2; margin: 0; }
+  h2 { font-size: 19pt; margin: 0 0 3mm; padding-bottom: 2mm; border-bottom: 1.5pt solid var(--gold); break-after: avoid; }
+  h3 { font-size: 12pt; margin: 5mm 0 2mm; color: var(--gold); break-after: avoid; }
+  p { margin: 0 0 2.5mm; }
+  section { margin-top: 7mm; }
+  section.newpage { break-before: page; margin-top: 0; }
+  code { font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; background: var(--gold-soft); padding: 0.3mm 1.2mm; border-radius: 1mm; white-space: nowrap; }
+  ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
+  li { margin-bottom: 1.3mm; }
+  strong { font-weight: 600; }
+
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover .kicker { letter-spacing: 0.28em; text-transform: uppercase; font-size: 8.5pt; color: var(--gold); font-weight: 600; }
+  .cover h1 { font-size: 42pt; margin: 5mm 0 4mm; }
+  .cover .sub { font-size: 14pt; color: var(--soft); max-width: 125mm; }
+  .cover .rule { width: 34mm; height: 2pt; background: var(--gold); margin: 9mm 0; }
+  .cover .state { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; max-width: 160mm; }
+  .card { border: 0.8pt solid var(--line); border-radius: 2.5mm; padding: 4mm 4.5mm; background: #fff; break-inside: avoid; }
+  .card h4 { margin: 0 0 1.5mm; font-size: 9pt; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-family: Inter, sans-serif; }
+  .card p, .card li { font-size: 9.6pt; }
+  .card ul { margin-bottom: 0; }
+
+  .note { border-left: 2.5pt solid var(--gold); background: var(--gold-soft); padding: 3mm 4mm; border-radius: 0 2mm 2mm 0; margin: 3mm 0 4mm; break-inside: avoid; }
+  .note.warn { border-color: var(--warn); background: var(--warn-soft); }
+  .note p:last-child, .note ul:last-child { margin-bottom: 0; }
+  .note .t { font-weight: 600; display: block; margin-bottom: 1mm; }
+
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.9pt; }
+  tr { break-inside: avoid; }
+  th { text-align: left; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); border-bottom: 1pt solid var(--ink); padding: 1.5mm 2mm; font-weight: 600; }
+  td { padding: 1.15mm 2mm; border-bottom: 0.6pt solid var(--line); vertical-align: top; }
+  td.n { white-space: nowrap; }
+
+  .phase { display: flex; align-items: baseline; gap: 3mm; margin: 6mm 0 2mm; break-after: avoid; }
+  .phase .num { flex: none; width: 8mm; height: 8mm; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 600; font-size: 10pt; display: flex; align-items: center; justify-content: center; transform: translateY(1mm); }
+  .phase h3 { margin: 0; color: var(--ink); font-size: 14pt; }
+  .phase .lvl { margin-left: auto; font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); white-space: nowrap; }
+
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li { position: relative; padding-left: 6.5mm; break-inside: avoid; }
+  ul.check li::before { content: ""; position: absolute; left: 0; top: 0.9mm; width: 3.2mm; height: 3.2mm; border: 0.9pt solid var(--ink); border-radius: 0.7mm; background: #fff; }
+  .small { font-size: 9pt; color: var(--soft); }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">Mod Baldur's Gate 3</div>
+  <h1>Romance Gortash</h1>
+  <div class="sub">Guide de la suite : ce qu'il te reste à faire dans le Toolkit, étape par étape.</div>
+  <div class="rule"></div>
+  <div class="state">
+    <div class="card">
+      <h4>Déjà fait</h4>
+      <ul>
+        <li>Tous les textes des 5 étapes, en anglais et en français</li>
+        <li>Variantes Tav / Durge et masculin / féminin / non binaire</li>
+        <li>330 textes localisés, chacun avec son identifiant</li>
+        <li>Le script qui livre les lettres et les cadeaux</li>
+        <li>Neuf extensions : cadeaux, compagnons, Fonderie, Orin...</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Reste à faire, côté Toolkit</h4>
+      <ul>
+        <li>Créer le projet, les objets et les flags</li>
+        <li>Construire les dialogues nœud par nœud</li>
+        <li>Compléter et compiler le script</li>
+        <li>Tester en jeu : rien ne l'a encore été</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section class="newpage">
+  <h2>À lire avant de commencer</h2>
+
+  <div class="note warn">
+    <span class="t">Le Toolkit officiel ne permet pas d'ajouter des dialogues</span>
+    <p>Larian a volontairement désactivé cette fonction. Pour créer les scènes de ce mod, il faut un déblocage communautaire du Toolkit : <strong>Toolkit Unlocked</strong> (Nexus Mods) ou <strong>MoonGlasses</strong>. Ces outils ne sont pas pris en charge par Larian.</p>
+    <p>Les lettres seules (objets, textes, script) restent faisables avec le Toolkit officiel.</p>
+  </div>
+
+  <div class="note">
+    <span class="t">Ce que je n'ai pas pu vérifier</span>
+    <ul>
+      <li>Je ne peux lancer ni le jeu ni le Toolkit : aucun fichier n'a été compilé ni testé.</li>
+      <li>Les noms exacts des menus du Toolkit peuvent différer de ce guide. Je décris quoi faire, pas toujours où cliquer.</li>
+      <li>Le script des lettres est écrit de mémoire. Attends-toi à des erreurs à la première compilation : envoie-les-moi.</li>
+    </ul>
+  </div>
+
+  <h3>Le parcours en un coup d'œil</h3>
+  <table>
+    <tr><th>Phase</th><th>Contenu</th><th>Difficulté</th></tr>
+    <tr><td class="n">1</td><td>Installer les outils</td><td>Facile</td></tr>
+    <tr><td class="n">2</td><td>Créer le projet et importer les textes</td><td>Facile</td></tr>
+    <tr><td class="n">3</td><td>Créer les quatre objets (lettres et carton)</td><td>Facile</td></tr>
+    <tr><td class="n">4</td><td>Créer les flags</td><td>Facile</td></tr>
+    <tr><td class="n">5</td><td>Compléter et compiler le script des lettres</td><td>Moyenne</td></tr>
+    <tr><td class="n">6</td><td>Construire les trois scènes de dialogue</td><td>Moyenne, long</td></tr>
+    <tr><td class="n">7</td><td>La fin où il survit</td><td>Très difficile</td></tr>
+    <tr><td class="n">8</td><td>Tester et publier</td><td>Moyenne</td></tr>
+    <tr><td class="n">+</td><td>Les extensions, à ajouter quand tu veux</td><td>Variable</td></tr>
+  </table>
+  <p>Après la phase 5, tu as déjà un mod jouable : la première lettre arrive au camp. Chaque scène ajoutée ensuite donne une nouvelle version qui fonctionne.</p>
+
+  <h3>Les fichiers du dépôt</h3>
+  <table>
+    <tr><th>Fichier</th><th>Rôle</th></tr>
+    <tr><td class="n"><code>Dialogs/*.md</code></td><td>La source de tous les textes, anglais et français côte à côte. C'est ici que tu modifies les dialogues.</td></tr>
+    <tr><td class="n"><code>Localization/handles.md</code></td><td>L'identifiant de chaque réplique, à recopier dans le Toolkit.</td></tr>
+    <tr><td class="n"><code>Localization/English</code> et <code>French</code></td><td>Les fichiers de texte que le jeu charge. Générés automatiquement.</td></tr>
+    <tr><td class="n"><code>Story/.../GR_Letters.txt</code></td><td>Le script Osiris qui livre les lettres.</td></tr>
+    <tr><td class="n"><code>tools/build_loca.py</code></td><td>Régénère les fichiers de texte après une modification.</td></tr>
+  </table>
+
+</section>
+
+<section class="newpage">
+  <h2>Les étapes</h2>
+
+  <div class="phase"><div class="num">1</div><h3>Installer les outils</h3><span class="lvl">Facile</span></div>
+  <ul class="check">
+    <li><strong>Baldur's Gate 3</strong> sur Steam, sous Windows, à jour.</li>
+    <li><strong>Baldur's Gate 3 Toolkit</strong> : gratuit sur Steam pour les possesseurs du jeu.</li>
+    <li><strong>Un déblocage du Toolkit</strong> (Toolkit Unlocked ou MoonGlasses), installé sur une copie propre du Toolkit, en suivant sa notice.</li>
+    <li><strong>BG3 Modders Multitool</strong> : pour décompresser les fichiers du jeu et y chercher les flags d'origine.</li>
+    <li><strong>Python 3</strong> : seulement si tu veux régénérer les textes après modification.</li>
+  </ul>
+
+  <div class="phase"><div class="num">2</div><h3>Créer le projet et importer les textes</h3><span class="lvl">Facile</span></div>
+  <ul class="check">
+    <li>Crée un projet nommé <code>GortashRomance</code>. Le Toolkit génère la structure et le fichier <code>meta.lsx</code>.</li>
+    <li>Copie <code>Localization/English/GortashRomance.loca.xml</code> et <code>Localization/French/GortashRomance.loca.xml</code> dans les dossiers de localisation du projet.</li>
+    <li>Vérifie dans le Toolkit qu'un identifiant de <code>handles.md</code> affiche bien son texte.</li>
+  </ul>
+
+  <div class="phase"><div class="num">3</div><h3>Créer les quatre objets</h3><span class="lvl">Facile</span></div>
+  <p>Ce sont les objets du mod de base ; les extensions en ajoutent sept. Duplique une lettre lisible du jeu, puis remplace son nom, sa description et son contenu par les identifiants indiqués dans <code>handles.md</code>.</p>
+  <table>
+    <tr><th>Objet</th><th>Répliques à utiliser</th><th>Section de handles.md</th></tr>
+    <tr><td>Lettre d'invitation</td><td class="n"><code>LETTER1_NAME</code> <code>_DESC</code> <code>_TEXT</code></td><td class="n">GR_Letter_Invitation</td></tr>
+    <tr><td>Carton du bal</td><td class="n"><code>CARD_NAME</code> <code>_DESC</code> <code>_TEXT</code></td><td class="n">GR_Ball</td></tr>
+    <tr><td>Deuxième lettre</td><td class="n"><code>LETTER2_NAME</code> <code>_DESC</code> <code>_TEXT</code></td><td class="n">GR_Private_Night</td></tr>
+    <tr><td>Lettre d'épilogue</td><td class="n"><code>EPILOGUE_NAME</code> <code>_DESC</code> <code>_TEXT</code></td><td class="n">GR_Ending</td></tr>
+  </table>
+  <div class="note">
+    <span class="t">Un choix à faire pour la première lettre</span>
+    <p>Sa formule d'ouverture existe en trois versions françaises (« Au héros », « À l'héroïne », « À la célébrité du moment »), mais un objet n'affiche qu'un texte. Le plus simple : garder la version non binaire pour tout le monde, puisqu'elle convient à tous.</p>
+  </div>
+
+  <div class="keep">
+  <div class="phase"><div class="num">4</div><h3>Créer les flags</h3><span class="lvl">Facile</span></div>
+  <p>Crée ces onze flags dans le projet, avec exactement ces noms. Ils mémorisent l'avancée de la romance. Chaque extension liste les siens en tête de son script.</p>
+  <table>
+    <tr><th>Flag</th><th>Signification</th><th>Flag</th><th>Signification</th></tr>
+    <tr><td class="n"><code>GR_Letter1_Delivered</code></td><td>Première lettre livrée</td><td class="n"><code>GR_Ball_Danced</code></td><td>Le joueur a dansé</td></tr>
+    <tr><td class="n"><code>GR_Office_Visited</code></td><td>Scène du bureau jouée</td><td class="n"><code>GR_Night_Invited</code></td><td>Deuxième lettre livrée</td></tr>
+    <tr><td class="n"><code>GR_Romance_Interested</code></td><td>Romance ouverte</td><td class="n"><code>GR_Romance_Committed</code></td><td>Romance établie après la nuit</td></tr>
+    <tr><td class="n"><code>GR_Romance_Declined</code></td><td>Refus au bureau</td><td class="n"><code>GR_Romance_Ended</code></td><td>Romance terminée pour de bon</td></tr>
+    <tr><td class="n"><code>GR_Ball_Invited</code></td><td>Carton du bal livré</td><td class="n"><code>GR_Gortash_Saved</code></td><td>Il a survécu au cerveau</td></tr>
+    <tr><td class="n"><code>GR_Ball_Attended</code></td><td>Bal joué</td><td class="n"></td><td></td></tr>
+  </table>
+  </div>
+
+  <div class="phase"><div class="num">5</div><h3>Compléter et compiler le script des lettres</h3><span class="lvl">Moyenne</span></div>
+  <p>Copie <code>GR_Letters.txt</code> dans le dossier des scripts d'histoire du projet. Il ne compile pas tant que ses éléments entre chevrons ne sont pas remplacés.</p>
+  <table>
+    <tr><th>À remplacer</th><th>Par quoi</th><th>Où le trouver</th></tr>
+    <tr><td class="n"><code>&lt;CORONATION_FLAG&gt;</code></td><td>Le flag du jeu qui marque la fin du couronnement</td><td>Dans les dialogues ou scripts d'origine du couronnement, à l'Acte 3</td></tr>
+    <tr><td class="n"><code>&lt;EPILOGUE_EVENT&gt;</code></td><td>Le flag du jeu qui marque le début de la fête d'épilogue</td><td>Dans les scripts d'origine de l'épilogue</td></tr>
+    <tr><td class="n"><code>&lt;ACT3_GOAL&gt;</code></td><td>Le nom du script parent de l'Acte 3</td><td>En tête d'un script d'origine de l'Acte 3</td></tr>
+    <tr><td class="n"><code>&lt;..._TEMPLATE&gt;</code></td><td>Les quatre objets de la phase 3</td><td>Leur nom suivi de leur identifiant, dans le Toolkit</td></tr>
+    <tr><td class="n"><code>&lt;GR_...&gt;</code></td><td>Les flags de la phase 4</td><td>Leur nom suivi de leur identifiant, dans le Toolkit</td></tr>
+  </table>
+  <ul class="check">
+    <li>Compile l'histoire. En cas d'erreur, copie le message complet et envoie-le-moi.</li>
+    <li><strong>Premier test en jeu</strong> : charge une sauvegarde de l'Acte 3 d'avant le couronnement, joue le couronnement, fais un repos long. La lettre doit apparaître dans l'inventaire.</li>
+  </ul>
+  <p class="small">Tu peux n'activer que la première partie du script pour ce test, et ajouter les autres lettres au fur et à mesure.</p>
+</section>
+
+<section style="margin-top:0">
+  <div class="keep">
+  <div class="phase"><div class="num">6</div><h3>Construire les scènes de dialogue</h3><span class="lvl">Moyenne, long</span></div>
+  <p>C'est le gros du travail. Fais les scènes dans l'ordre de l'histoire, et teste chacune avant de passer à la suivante.</p>
+  <table>
+    <tr><th>Scène</th><th>Script à suivre</th><th>Répliques</th><th>Textes</th></tr>
+    <tr><td>Soirée au bureau</td><td class="n"><code>GR_Office_Evening.md</code></td><td class="n">37</td><td class="n">47</td></tr>
+    <tr><td>Bal</td><td class="n"><code>GR_Ball.md</code></td><td class="n">52</td><td class="n">58</td></tr>
+    <tr><td>Nuit privée</td><td class="n"><code>GR_Private_Night.md</code></td><td class="n">47</td><td class="n">49</td></tr>
+  </table>
+  </div>
+  <p class="small">« Textes » compte les variantes : une réplique à trois versions donne trois textes. Les objets ne sont pas comptés ici.</p>
+
+  <h3>La méthode, pour chaque scène</h3>
+  <ol>
+    <li><strong>Crée un nouveau dialogue</strong> dans le projet, au nom du script (par exemple <code>GR_Office_Evening</code>).</li>
+    <li><strong>Ajoute un nœud par réplique</strong>, dans l'ordre du script. Les lignes des tableaux « Choice » sont les réponses du joueur.</li>
+    <li><strong>Renseigne l'orateur</strong> : Gortash, le narrateur ou le joueur.</li>
+    <li><strong>Colle l'identifiant du texte</strong> depuis <code>handles.md</code>, colonne « Handle ».</li>
+    <li><strong>Relie les nœuds</strong> en suivant la colonne « Goes to » et les mentions « Goes to N4 » du script.</li>
+    <li><strong>Ajoute les conditions</strong> <code>[Tav]</code> et <code>[Durge]</code> : la réplique ne s'affiche que si le joueur est, ou n'est pas, la Sombre Pulsion.</li>
+    <li><strong>Ajoute les variantes de genre</strong> : quand <code>handles.md</code> indique <code>M</code>, <code>F</code> et <code>NB</code>, le nœud porte trois textes, chacun réservé à une identité du joueur.</li>
+    <li><strong>Pose les flags</strong> indiqués par la colonne « Sets flag » et le tableau « Flags » en tête de script.</li>
+    <li><strong>Branche la scène</strong> : ajoute la réplique <code>P0</code> comme nouvelle option dans le dialogue existant de Gortash, visible seulement si les conditions de « How it starts » sont remplies.</li>
+  </ol>
+
+  <div class="note">
+    <span class="t">Comment faire les points 6, 7 et 9</span>
+    <p>Ouvre un dialogue d'origine du jeu qui fait la même chose et copie sa façon de faire : une réplique réservée à la Sombre Pulsion, une réplique qui change selon le genre, et le dialogue de Gortash dans son bureau. C'est la méthode la plus sûre, car je ne connais pas les noms exacts des réglages.</p>
+  </div>
+
+  <h3>Simplifications possibles pour une première version</h3>
+  <ul>
+    <li><strong>Bal</strong> : le héraut et les patriars demandent des personnages en plus dans la salle. Leurs répliques peuvent devenir du texte de narrateur.</li>
+    <li><strong>Nuit privée</strong> : ses appartements n'existent pas dans le jeu. La scène peut se jouer dans le bureau, derrière le fondu au noir.</li>
+    <li><strong>Voix</strong> : les nouvelles répliques sont muettes. C'est normal et attendu pour ce type de mod.</li>
+  </ul>
+
+  <div class="keep">
+  <div class="phase"><div class="num">7</div><h3>La fin où il survit</h3><span class="lvl">Très difficile</span></div>
+  <p>Le script est dans <code>GR_Ending.md</code>, en trois parties. Fais-les dans cet ordre, de la plus simple à la plus dure.</p>
+  <table>
+    <tr><th>Partie</th><th>Contenu</th><th>Ce que ça demande</th></tr>
+    <tr><td class="n">C</td><td>Lettre d'Enver à la fête d'épilogue</td><td>Un objet et quelques lignes de script, déjà écrites. Facile.</td></tr>
+    <tr><td class="n">B</td><td>Retrouvailles après la bataille</td><td>Une nouvelle scène insérée dans la séquence de fin du jeu.</td></tr>
+    <tr><td class="n">A</td><td>Le sauvetage face au cerveau</td><td>Modifier la scène d'origine où il meurt. C'est le point le plus dur du mod.</td></tr>
+  </table>
+  </div>
+  <div class="note warn">
+    <span class="t">La partie C dépend de la partie A</span>
+    <p>La lettre d'épilogue n'a de sens que s'il est vivant. Tant que la partie A n'existe pas, il meurt comme dans le jeu d'origine. Avant de t'y attaquer, regarde la scène d'origine : j'ai décrit sa mort de mémoire, et les répliques devront peut-être s'y adapter.</p>
+  </div>
+
+  <div class="phase"><div class="num">8</div><h3>Tester et publier</h3><span class="lvl">Moyenne</span></div>
+  <ul class="check">
+    <li>Un Tav masculin, un Tav féminin et un Tav non binaire voient chacun le bon texte, en français et en anglais.</li>
+    <li>La Sombre Pulsion voit ses répliques réservées, et Tav ne les voit pas.</li>
+    <li>Refuser au bureau, refuser la danse, partir pendant la nuit : la romance s'arrête ou attend, comme prévu dans les scripts.</li>
+    <li>Tuer Gortash ou rompre l'alliance ne fait pas arriver de lettre.</li>
+    <li>Une partie sans le mod, puis avec : la sauvegarde se charge toujours.</li>
+    <li>Génère le fichier <code>.pak</code> du mod depuis le Toolkit.</li>
+    <li>Avant de publier, lis les règles de la plateforme choisie sur le contenu pour adultes et sur les mods faits avec un Toolkit débloqué.</li>
+  </ul>
+</section>
+
+<section class="newpage">
+  <h2>Les extensions</h2>
+  <p>Tout ce qui enrichit la romance au-delà des cinq étapes. Chaque extension est indépendante : ajoute-les dans l'ordre que tu veux, une fois le mod de base en place. Les textes sont déjà écrits et localisés.</p>
+  <table>
+    <tr><th>Extension</th><th>Script</th><th>Ce qu'il faut créer</th><th>Difficulté</th></tr>
+    <tr><td>Cadeaux</td><td class="n"><code>GR_Gifts.md</code></td><td>4 objets : bouteille, carnet de bal, clé, couteau pour Durge. Livraison déjà dans le script.</td><td class="n">Facile</td></tr>
+    <tr><td>Lettre de rupture</td><td class="n"><code>GR_Breakup.md</code></td><td>2 objets, un en « vous » et un en « tu ». Livraison déjà dans le script.</td><td class="n">Facile</td></tr>
+    <tr><td>Variantes de fin</td><td class="n"><code>GR_Ending.md</code></td><td>1 objet : la lettre d'épilogue si le joueur a quitté la ville. 1 réplique de narrateur pour la fin sur le trône.</td><td class="n">Facile</td></tr>
+    <tr><td>Répliques d'ambiance</td><td class="n"><code>GR_Ambient.md</code></td><td>8 phrases d'accueil dans le dialogue de Gortash, selon l'avancée.</td><td class="n">Facile</td></tr>
+    <tr><td>Réactions des compagnons</td><td class="n"><code>GR_Companions.md</code></td><td>8 dialogues de camp : une vraie scène pour Karlach, un échange pour les autres.</td><td class="n">Moyenne</td></tr>
+    <tr><td>Jalousie</td><td class="n"><code>GR_Jealousy.md</code></td><td>1 scène courte, si le joueur a déjà une autre romance.</td><td class="n">Moyenne</td></tr>
+    <tr><td>Après Orin</td><td class="n"><code>GR_Orin.md</code></td><td>1 scène, avec les répliques de Durge selon qu'iel a accepté ou rejeté Bhaal.</td><td class="n">Moyenne</td></tr>
+    <tr><td>La Fonderie</td><td class="n"><code>GR_Foundry.md</code></td><td>1 scène de dispute, qui peut finir en réconciliation ou en rupture.</td><td class="n">Difficile</td></tr>
+    <tr><td>Souvenirs de Durge</td><td class="n"><code>GR_Memories.md</code></td><td>3 scènes narrées pendant un repos long.</td><td class="n">Difficile</td></tr>
+  </table>
+
+  <h3>Ce qu'il faut chercher dans le jeu d'origine</h3>
+  <p>Plusieurs extensions dépendent d'un état du jeu que je ne peux pas lire d'ici. Pour chacune, trouve le flag ou le tag d'origine correspondant :</p>
+  <ul>
+    <li>le joueur est la Sombre Pulsion (cadeau du couteau, souvenirs) ;</li>
+    <li>le joueur a une romance avec un compagnon (jalousie) ;</li>
+    <li>la Fonderie est détruite ;</li>
+    <li>Orin est morte, et Durge a accepté ou rejeté Bhaal.</li>
+  </ul>
+
+  <div class="note warn">
+    <span class="t">Deux extensions à vérifier avant de les construire</span>
+    <ul>
+      <li><strong>La Fonderie</strong> : dans le jeu d'origine, la détruire peut rompre l'alliance ou rendre Gortash hostile. Regarde ce qui se passe réellement avant de te lancer.</li>
+      <li><strong>Souvenirs de Durge</strong> : le déclenchement d'une scène pendant le repos n'est pas dans mon script. Copie la façon dont le jeu lance ses propres scènes de nuit.</li>
+    </ul>
+  </div>
+
+  <h3>Ce que je n'ai pas pu faire</h3>
+  <ul>
+    <li><strong>Une vraie danse animée</strong> et <strong>de vrais appartements</strong> : cela se fabrique dans le Toolkit (animation, décor). Les scènes actuelles passent par le narrateur et un fondu au noir.</li>
+    <li><strong>Les voix</strong> : il faut un comédien. <code>docs/voice_lines.md</code> liste toutes les répliques parlées par personnage, prêtes à lui être envoyées (116 pour Gortash).</li>
+  </ul>
+</section>
+
+<section class="newpage">
+  <h2>Aide-mémoire</h2>
+
+  <h3>Lire un script de dialogue</h3>
+  <table>
+    <tr><th>Notation</th><th>Signification</th></tr>
+    <tr><td class="n"><code>N2</code>, <code>A1</code>, <code>P0</code></td><td>Identifiant de la réplique. C'est lui qu'on retrouve dans <code>handles.md</code>.</td></tr>
+    <tr><td class="n"><code>[Tav]</code></td><td>Réplique affichée si le joueur n'est pas la Sombre Pulsion.</td></tr>
+    <tr><td class="n"><code>[Durge]</code></td><td>Réplique affichée si le joueur est la Sombre Pulsion.</td></tr>
+    <tr><td class="n"><code>[Durge, rejected Bhaal]</code></td><td>Durge a refusé Bhaal. <code>accepted Bhaal</code> : Durge est devenu son Élu.</td></tr>
+    <tr><td class="n"><code>[a / b / c]</code></td><td>Trois versions de la réplique : masculin, féminin, non binaire, toujours dans cet ordre.</td></tr>
+    <tr><td class="n"><code>*texte*</code></td><td>Action du joueur, affichée en italique.</td></tr>
+    <tr><td class="n"><code>&lt;br&gt;</code></td><td>Retour à la ligne dans une lettre.</td></tr>
+  </table>
+
+  <h3>Quand tu modifies un dialogue</h3>
+  <ol>
+    <li>Modifie le texte dans le fichier <code>Dialogs/</code> concerné, sans toucher à l'identifiant de la réplique (<code>N2</code>, <code>A1</code>...).</li>
+    <li>Lance <code>python3 tools/build_loca.py</code>.</li>
+    <li>Recopie les deux fichiers <code>GortashRomance.loca.xml</code> dans ton projet.</li>
+  </ol>
+  <p class="small">Les identifiants de localisation ne changent pas quand le texte change : rien à refaire dans le Toolkit. Ils ne changent que si tu renommes une réplique.</p>
+
+
+  <h3>Les règles d'écriture à garder si tu modifies les textes</h3>
+  <ul>
+    <li><strong>Tutoiement</strong> : Gortash vouvoie Tav et Durge jusqu'à la nuit privée, puis tutoie. Le narrateur vouvoie toujours. Deux exceptions voulues : il revient au « vous » dans la scène de la Fonderie, et il tutoie dans les souvenirs de Durge.</li>
+    <li><strong>Non binaire en français</strong> : « iel » et « ellui », et des tournures sans accord (« Vous voilà » plutôt que « Vous êtes venu »).</li>
+    <li><strong>Anglais</strong> : pas de variante quand Gortash parle au joueur. Il en faut seulement quand quelqu'un parle du joueur (<code>[he / she / they]</code>).</li>
+    <li><strong>Durge</strong> : c'est une romance retrouvée. Ils étaient amants, et Gortash a porté son deuil.</li>
+  </ul>
+
+  <h3>Termes français à vérifier dans le jeu</h3>
+  <p>Je les ai écrits de mémoire. Si le jeu utilise un autre terme, corrige-le dans les scripts puis régénère les textes.</p>
+  <table>
+    <tr><th>Anglais</th><th>Français utilisé</th><th>Anglais</th><th>Français utilisé</th></tr>
+    <tr><td>Shadow-Cursed Lands</td><td>Terres maudites</td><td>the Absolute</td><td>l'Absolue</td></tr>
+    <tr><td>Netherstones</td><td>pierres infernales</td><td>patriars</td><td>patriars</td></tr>
+    <tr><td>the Urge</td><td>la Pulsion</td><td>Chosen</td><td>Élu</td></tr>
+    <tr><td>Tethyr</td><td>Téthyr</td><td>Flaming Fist</td><td>Poing Enflammé</td></tr>
+    <tr><td>Lower City</td><td>Ville Basse</td><td>Avernus</td><td>Averne</td></tr>
+    <tr><td>Gondians</td><td>Gondiens</td><td></td><td></td></tr>
+  </table>
+  <p class="small">Déjà confirmés par toi : Forteresse du roc du dracosir, Garde d'Acier.</p>
+
+  <h3>Points encore ouverts dans l'histoire</h3>
+  <ul>
+    <li><strong>Karlach</strong> : si le joueur la rabroue, elle se ferme, mais son départ du groupe n'est pas scripté.</li>
+    <li><strong>Jalousie</strong> : promettre de rompre l'autre romance ne la rompt pas réellement dans le jeu.</li>
+    <li><strong>Orin</strong> : la scène demande la nuit privée. Si Orin meurt avant, elle ne se joue pas.</li>
+    <li><strong>Tutoiement des compagnons</strong> : je les fais tous tutoyer le joueur. À comparer avec le jeu.</li>
+  </ul>
+
+  <h3>Si tu bloques</h3>
+  <p>Envoie-moi le message d'erreur complet, ou une capture de l'écran du Toolkit, et dis-moi à quelle phase tu en es. Pour le script, je peux corriger directement le fichier dès que j'ai l'erreur de compilation.</p>
+
+  <h3>Ressources</h3>
+  <table>
+    <tr><th>Ressource</th><th>Adresse</th></tr>
+    <tr><td>Wiki communautaire du modding BG3</td><td class="n">wiki.bg3.community</td></tr>
+    <tr><td>Toolkit officiel sur Steam</td><td class="n">store.steampowered.com/app/2956320</td></tr>
+    <tr><td>Toolkit Unlocked sur Nexus Mods</td><td>Chercher « Toolkit Unlocked » sur nexusmods.com, rubrique Baldur's Gate 3</td></tr>
+  </table>
+</section>
+
+</body>
+</html>
