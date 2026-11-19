@@ -52,8 +52,8 @@ End of dialogue. Nothing is set, so the letter offers the choice again.
 - FR: Vous poussez les portes. Au fond de la pièce, près de son bureau, Gortash vous attend.
 
 **AG - Gortash**
-- EN: There you are. I was beginning to wonder.
-- FR: Vous voilà. Je commençais à me poser des questions.
+- EN: At last. I was beginning to take it personally.
+- FR: Enfin. Je commençais à le prendre personnellement.
 
 **N1 - Narrator**
 - EN: The office has been emptied of clerks and guards. Two glasses wait on the desk, already poured.
@@ -64,8 +64,8 @@ End of dialogue. Nothing is set, so the letter offers the choice again.
 - FR: [Vous êtes venu. / Vous êtes venue. / Vous voilà.] Et sans escorte, comme demandé. Vous n'imaginez pas comme il est rare de croiser quelqu'un qui suit une consigne simple sans qu'on la lui ordonne.
 
 **N2D - Gortash** `[Durge]`
-- EN: There you are. You always did prefer to arrive after dark. Some habits survive anything, it seems - even what was done to you.
-- FR: Vous voilà. Vous avez toujours préféré arriver à la nuit tombée. Certaines habitudes survivent à tout, on dirait - même à ce qu'on vous a fait.
+- EN: You always did prefer to arrive after dark. Some habits survive anything, it seems - even what was done to you.
+- FR: Vous avez toujours préféré arriver à la nuit tombée. Certaines habitudes survivent à tout, on dirait - même à ce qu'on vous a fait.
 
 ## Choice A
 
@@ -81,8 +81,8 @@ End of dialogue. Nothing is set, so the letter offers the choice again.
 - FR: Quelqu'un qui a le sens des priorités. Bien. Asseyez-vous. C'est un rouge du Téthyr, plus vieux que mes ambitions, mais de peu.
 
 **N3b - Gortash**
-- EN: Straight to the ledger. I respect that. What I want, tonight, is one hour in which nobody asks me to sign anything. And your company, which I find I have been curious about.
-- FR: Droit aux comptes. J'apprécie. Ce que je veux, ce soir, c'est une heure où personne ne me demande de signer quoi que ce soit. Et votre compagnie, qui m'intrigue plus que prévu.
+- EN: Straight to the ledger. I respect that. What I want, tonight, is one hour in which nobody asks me to sign anything. And your company. I have been curious about it for longer than I care to admit.
+- FR: Droit au but. J'apprécie. Ce que je veux, ce soir, c'est une heure où personne ne me demande de signer quoi que ce soit. Et votre compagnie. Elle m'intrigue depuis plus longtemps que je ne voudrais l'admettre.
 
 **N3c - Gortash**
 - EN: Neither. I have simply calculated that you are more interesting alive and unthreatened. Do sit down, you're making the furniture nervous.
@@ -163,8 +163,8 @@ All four go to N7.
 - FR: Il retourne votre main et pose ses lèvres au creux de votre poignet, sans hâte, sans vous quitter des yeux. L'espace d'un instant, l'Archiduc a l'air d'un homme qui s'est trompé dans ses comptes.
 
 **N9a2 - Gortash**
-- EN: Well. That was not in my projections. I shall have to revise them.
-- FR: Tiens. Ce n'était pas dans mes prévisions. Il va falloir que je les révise.
+- EN: Well. That was not in the design. I shall have to redraw it.
+- FR: Tiens. Ce n'était pas prévu dans les plans. Il va falloir que je les redessine.
 
 Goes to X2.
 

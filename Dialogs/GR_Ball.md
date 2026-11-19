@@ -161,8 +161,8 @@ All four go to N7.
 - FR: Vous menez. Il le tolère pendant trois mesures exactement, puis vous met à l'épreuve d'un tour. Vous tenez bon, et quelque chose comme du ravissement passe sur son visage.
 
 **N9a2 - Gortash**
-- EN: Nobody leads me. I find I do not mind it. Tell no one.
-- FR: Personne ne me mène. Je découvre que cela ne me déplaît pas. N'en dites rien à personne.
+- EN: Nobody leads me. Apparently I do not mind it. Tell no one.
+- FR: Personne ne mène la danse à ma place. Étrangement, cela ne me déplaît pas. N'en dites rien à personne.
 
 Goes to N10.
 

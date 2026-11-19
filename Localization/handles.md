@@ -12,8 +12,8 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | G1D | Gortash | all | `h5c16a6f0g56d1g5da6gac9fgf928aee0ea1f` | Every time you walk through that door, I count it as some... |
 | G2 | Gortash | all | `h76e032b2gfdffg5ee1g907ag70b81f27bd0f` | My tailors are still recovering. So, I confess, am I. |
 | G2b | Gortash | all | `h07a9536eg463ag53fcg82a6g8c5260cbb79b` | You still owe me a dance. I am keeping the debt on my boo... |
-| G3 | Gortash | all | `haf908e7ageda5g568cga055g0e06a339eee5` | There you are. I was halfway through a death warrant, and... |
-| G3D | Gortash | all | `h33f34cbfg8012g54e6g852fg8df1ec88b8e9` | Come in. Close the door. Let the city wait. It has had me... |
+| G3 | Gortash | all | `haf908e7ageda5g568cga055g0e06a339eee5` | Ah. My favourite problem. I was halfway through a death w... |
+| G3D | Gortash | all | `h33f34cbfg8012g54e6g852fg8df1ec88b8e9` | Come in, my blade. Close the door. Let the city wait. It ... |
 | G4 | Gortash | M | `h6129695dge523g5f72ga57fg1b8df47a6205` | Ally. Strictly business, as agreed. You will notice I am ... |
 | G4 | Gortash | F | `hd3f79a14g9900g5a25g9870g339516045933` | Ally. Strictly business, as agreed. You will notice I am ... |
 | G4 | Gortash | NB | `h9812cc7egc1f1g500fg8573gc47de32e2483` | Ally. Strictly business, as agreed. You will notice I am ... |
@@ -64,7 +64,7 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | C3 | Player | all | `he7f86d85gbec9g5fa1gb98dgc9b2a8377c4c` | I don't dance. |
 | C4 | Player | all | `h27fc3496g4a6eg59e3g8699gfeda546c4a2e` | Not tonight, Gortash. Not ever. |
 | N9a | Narrator | all | `hd8dc791dg6b35g5f25ga923g80379a0938b0` | You take the lead. He allows it for exactly three bars, t... |
-| N9a2 | Gortash | all | `h40897dd5g50deg5361g89c3gff3891b5fbaf` | Nobody leads me. I find I do not mind it. Tell no one. |
+| N9a2 | Gortash | all | `h40897dd5g50deg5361g89c3gff3891b5fbaf` | Nobody leads me. Apparently I do not mind it. Tell no one. |
 | N9b | Narrator | all | `h799409e4gf9a9g5d42gb2f3gae43c7f9a08b` | He leads the way he governs: precisely, one step ahead, w... |
 | N9b2 | Gortash | all | `h79b6e989g4a7cg5fe3g8991g7d98e83ee76f` | A childhood among cobblers. One learns to mind one's feet. |
 | N9c | Gortash | all | `ha9fd3380g7ba9g5c60g949eg3afab3002616` | Neither do I, as a rule. So we shall be bad at it togethe... |
@@ -249,11 +249,11 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 
 | Id | Speaker | Variant | Handle | English text |
 |---|---|---|---|---|
-| LETTER1_NAME | Item name | all | `hdc1a52fag0be3g548bg92e0gc5ceb67b55ba` | Letter Sealed with the Archduke's Crest |
-| LETTER1_DESC | Item description | all | `h8090be9cg5d03g58b0g9186gd21ba42ff052` | Heavy paper, black wax, and a faint trace of machine oil.... |
-| LETTER1_TEXT | Item content | M | `h4a07ab81g8e0bg5305gada6gcaa3859829fa` | To the hero of the hour,<br><br>Baldur's Gate has a new A... |
-| LETTER1_TEXT | Item content | F | `h9b499a7egddf2g5010g9f61g911ac8c3a3b3` | To the hero of the hour,<br><br>Baldur's Gate has a new A... |
-| LETTER1_TEXT | Item content | NB | `h4342cc34g228eg5ccbg9109g32d150d32b05` | To the hero of the hour,<br><br>Baldur's Gate has a new A... |
+| LETTER1_NAME | Item name | all | `hdc1a52fag0be3g548bg92e0gc5ceb67b55ba` | Letter Sealed in Black Wax |
+| LETTER1_DESC | Item description | all | `h8090be9cg5d03g58b0g9186gd21ba42ff052` | Heavy paper, black wax pressed with the Archduke's crest,... |
+| LETTER1_TEXT | Item content | M | `h4a07ab81g8e0bg5305gada6gcaa3859829fa` | At the coronation, I spent more time watching you than th... |
+| LETTER1_TEXT | Item content | F | `h9b499a7egddf2g5010g9f61g911ac8c3a3b3` | At the coronation, I spent more time watching you than th... |
+| LETTER1_TEXT | Item content | NB | `h4342cc34g228eg5ccbg9109g32d150d32b05` | At the coronation, I spent more time watching you than th... |
 
 ## GR_Memories
 
@@ -279,12 +279,12 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | L3 | Narrator | all | `h7ef64905g2b4ag509fgb40ag10e4502469ec` | You fold the letter and put it away. It will keep. |
 | P0 | Player | all | `he5cc7190g4dccg50b1ga096g0b0b524b53d3` | I received your invitation. |
 | A0 | Narrator | all | `h527d0beeg2e85g5bf4g9193g67b8aced10b0` | You push open the doors. At the far end of the room, by h... |
-| AG | Gortash | all | `h380b9551gf3fbg5315ga781geda63a0ebf73` | There you are. I was beginning to wonder. |
+| AG | Gortash | all | `h380b9551gf3fbg5315ga781geda63a0ebf73` | At last. I was beginning to take it personally. |
 | N1 | Narrator | all | `he03e353dg47d0g5b16ga2b1gabc6f11dfc68` | The office has been emptied of clerks and guards. Two gla... |
 | N2 | Gortash | M | `h6f41dcb1g4f7eg5e5dgbeffg8870f6d64ce9` | You came. And alone, as asked. You have no idea how rare ... |
 | N2 | Gortash | F | `h0928b975g85ccg5812ga744g25d4fd0e3632` | You came. And alone, as asked. You have no idea how rare ... |
 | N2 | Gortash | NB | `ha533ba2bg101cg59ddg8a44g8f9f8b74ef43` | You came. And alone, as asked. You have no idea how rare ... |
-| N2D | Gortash | all | `h7aa5c2d6g3aecg594dga78cg2d2cd1a39cde` | There you are. You always did prefer to arrive after dark... |
+| N2D | Gortash | all | `h7aa5c2d6g3aecg594dga78cg2d2cd1a39cde` | You always did prefer to arrive after dark. Some habits s... |
 | A1 | Player | all | `he40d643dg502dg57deg94d5g2c139568a64c` | You promised better wine. I'm here to hold you to it. |
 | A2 | Player | all | `h3cd3babdgaeb8g5379ga136gf7ca9554eac5` | What do you want, Gortash? |
 | A3 | Player | all | `h5a9319dag11cdg5f98g97d8g4945feb394cb` | An Archduke with no guards in the room. Either you trust ... |
@@ -318,7 +318,7 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | C2 | Player | all | `hca5b1633g3082g52f0g95d4g981f2ae38900` | Invite me properly next time. I might say yes. |
 | C3 | Player | all | `h36814a90g09d5g5021gb1b3g42eddb39493b` | We are allies, Gortash. Nothing more. |
 | N9a | Narrator | all | `hd9156077gfa3eg563dg9805g29a996c93806` | He turns your hand over and presses his lips to the insid... |
-| N9a2 | Gortash | all | `he6f69d14g5defg56e1gae65g7dedcabb07da` | Well. That was not in my projections. I shall have to rev... |
+| N9a2 | Gortash | all | `he6f69d14g5defg56e1gae65g7dedcabb07da` | Well. That was not in the design. I shall have to redraw it. |
 | N9b | Gortash | all | `hd88563f1ge323g5d81gbf7fg370675c8a0e9` | Properly. With an orchestra, if need be. You will hear fr... |
 | N9c | Gortash | all | `h4ee4b811gf880g5e1cg8d7dgc4c03ce5c2f8` | As you like. I am a patient man, and the offer does not e... |
 | X1 | Gortash | all | `h49e76f51gd737g5802g821bg079270f8467b` | A pity. The door is behind you. The invitation stays open. |
@@ -388,7 +388,7 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | C3 | Player | all | `h5407f490gb27cg5da6g9786ge08168cf74ec` | Then don't calculate. Just this once. |
 | C5 | Player | all | `ha243e9b3ga22fg5085g8f13gb240ebf8be7c` | I don't remember loving you. But something in me does. |
 | C4 | Player | all | `hae3dcf7dg5b81g5f6agad82gf3371dabdce1` | This was a mistake. Goodbye, Enver. |
-| N7x | Gortash | all | `h741d8f3dg5340g59afgab8eg1e069119c3ad` | I see. Close the door on your way out. I find I would rat... |
+| N7x | Gortash | all | `h741d8f3dg5340g59afgab8eg1e069119c3ad` | I see. Close the door on your way out. I would rather not... |
 | N7 | Narrator | all | `hdb5fb184g3cffg5b0ag9636gdc9c943df4e5` | He kisses you the way he does nothing else: without a pla... |
 | N7b | Gortash | all | `h1d04e755g23d6g5f04gb481gde5b7ae00662` | I have spent my life taking what I wanted. Tonight, I int... |
 | E1 | Player | all | `hccb2274cgb45fg5e28g961ag869fe5bb0a7a` | Yes, my lord. |
@@ -401,9 +401,9 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | N8d | Narrator | all | `h948351a3gd56cg5bbbg80c3gfebd3755f694` | "And you followed every one that mattered." He knows exac... |
 | N8 | Narrator | all | `hda0c7ed1g44c2g5545ga9a3gd83728674a7d` | The fire burns low. The blueprints lie where they fell. F... |
 | N9 | Narrator | all | `hff9739cdg8fc4g5996gac0dgaad2de2c2ae4` | You wake before dawn. He is already awake, watching the c... |
-| N10 | Gortash | all | `ha446b20egf1cfg5293g95cdg82416eb42f01` | Stay until the bells. After that I must be a tyrant again... |
-| N10D | Gortash | all | `hd8cbe5e8gbde6g57c0g9b11g51c6f239f786` | You slept. No knives, no whispers, no blood on the sheets... |
-| N10R | Gortash | all | `hc955d688gf5c9g5f1bgb9ddga061074e826e` | You slept. No knives, no whispers. I keep waiting for you... |
+| N10 | Gortash | all | `ha446b20egf1cfg5293g95cdg82416eb42f01` | Stay until the bells, my favourite problem. After that I ... |
+| N10D | Gortash | all | `hd8cbe5e8gbde6g57c0g9b11g51c6f239f786` | You slept, my blade. No knives, no whispers, no blood on ... |
+| N10R | Gortash | all | `hc955d688gf5c9g5f1bgb9ddga061074e826e` | You slept, my blade. No knives, no whispers. I keep waiti... |
 | D1 | Player | all | `he5b3ba44g2a41g5f67gad8fg5883acb0cf62` | Until the bells. |
 | D2 | Player | all | `h3623480eg5a72g5a76ga23fg9adba926103b` | And once the brain is dealt with? What are we then? |
 | D3 | Player | all | `h53d851cbg1bffg58d4g8142gab643a0a322c` | If He takes me, you will be the first one I kill. |

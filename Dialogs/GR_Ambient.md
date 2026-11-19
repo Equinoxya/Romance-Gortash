@@ -7,6 +7,7 @@ One-line greetings Gortash uses when the player talks to him between scenes. Not
 - Add these as alternative opening lines in Gortash's existing dialogue at Wyrm's Rock.
 - Only one plays, chosen by the flags below. If none applies, his base game greeting plays.
 - French follows the rule of the mod: "vous" until the private night, "tu" after it.
+- After the private night he has a pet name for the player: "my favourite problem" / "mon problème préféré" for Tav, "my blade" / "ma lame" for the Dark Urge. It first appears in `GR_Private_Night` (`N10`, `N10D`, `N10R`).
 
 | Line | Shown when |
 |---|---|
@@ -36,12 +37,12 @@ One-line greetings Gortash uses when the player talks to him between scenes. Not
 - FR: Vous me devez toujours une danse. Je garde la créance dans mes livres, avec les intérêts.
 
 **G3 - Gortash** `[Tav]`
-- EN: There you are. I was halfway through a death warrant, and it has lost all interest.
-- FR: Te voilà. J'étais au milieu d'un arrêt de mort, et il a perdu tout intérêt.
+- EN: Ah. My favourite problem. I was halfway through a death warrant, and it has lost all interest.
+- FR: Ah. Mon problème préféré. J'étais au milieu d'un arrêt de mort, et il a perdu tout intérêt.
 
 **G3D - Gortash** `[Durge]`
-- EN: Come in. Close the door. Let the city wait. It has had me for years, and you were gone for most of them.
-- FR: Entre. Ferme la porte. Que la ville attende. Elle m'a eu pendant des années, et tu n'étais pas là pour la plupart.
+- EN: Come in, my blade. Close the door. Let the city wait. It has had me for years, and you were gone for most of them.
+- FR: Entre, ma lame. Ferme la porte. Que la ville attende. Elle m'a eu pendant des années, et tu n'étais pas là pour la plupart.
 
 **G4 - Gortash**
 - EN: Ally. Strictly business, as agreed. You will notice I am being impeccably well behaved.

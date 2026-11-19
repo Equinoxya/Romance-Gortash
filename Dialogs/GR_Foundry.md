@@ -36,8 +36,8 @@ What happens to the romance if the player destroys the Steel Watch Foundry. Nota
 | FA4 | It was a mistake. I'm sorry. | C'était une erreur. Pardon. | F3d |
 
 **F3a - Gortash**
-- EN: Gondians. Yes. I know precisely how many, I signed for each of them. I told myself it was arithmetic. You have just made the sum come out differently, and I do not thank you for it.
-- FR: Des Gondiens. Oui. Je sais précisément combien, j'ai signé pour chacun d'eux. Je me disais que c'était de l'arithmétique. Vous venez de fausser le résultat, et je ne vous en remercie pas.
+- EN: Gondians. Yes. I know precisely how many, I signed for each of them. I told myself it was a clause in a contract. You have just read it aloud to me, and I do not thank you for it.
+- FR: Des Gondiens. Oui. Je sais précisément combien, j'ai signé pour chacun d'eux. Je me disais que ce n'était qu'une clause dans un contrat. Vous venez de me la lire à voix haute, et je ne vous en remercie pas.
 
 **F3b - Gortash**
 - EN: No. Of course you won't. That is one of the things I... It is one of the things about you.

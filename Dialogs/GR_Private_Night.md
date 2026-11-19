@@ -153,8 +153,8 @@ End of dialogue. The scene stays available.
 | C4 | | This was a mistake. Goodbye, Enver. | C'était une erreur. Adieu, Enver. | `GR_Romance_Ended` | N7x |
 
 **N7x - Gortash**
-- EN: I see. Close the door on your way out. I find I would rather not watch.
-- FR: Je vois. Ferme la porte en sortant. Je préfère ne pas regarder.
+- EN: I see. Close the door on your way out. I would rather not watch you go.
+- FR: Je vois. Ferme la porte en sortant. Je préfère ne pas te regarder partir.
 
 End of dialogue.
 
@@ -210,16 +210,16 @@ Fade to black.
 - FR: Vous vous éveillez avant l'aube. Il ne dort déjà plus et fixe le plafond, un bras autour de vous, comme s'il s'attendait à ce qu'on vienne vous réclamer.
 
 **N10 - Gortash** `[Tav]`
-- EN: Stay until the bells. After that I must be a tyrant again, and you must save the world from people like me. But until the bells.
-- FR: Reste jusqu'aux cloches. Ensuite, je devrai redevenir un tyran, et toi sauver le monde des gens de mon espèce. Mais jusqu'aux cloches.
+- EN: Stay until the bells, my favourite problem. After that I must be a tyrant again, and you must save the world from people like me. But until the bells.
+- FR: Reste jusqu'aux cloches, mon problème préféré. Ensuite, je devrai redevenir un tyran, et toi sauver le monde des gens de mon espèce. Mais jusqu'aux cloches.
 
 **N10D - Gortash** `[Durge]` (Bhaal still has a hold on them)
-- EN: You slept. No knives, no whispers, no blood on the sheets. Either your father's grip is slipping, or I am more soothing than my reputation suggests.
-- FR: Tu as dormi. Ni lames, ni murmures, ni sang sur les draps. Soit l'emprise de ton père faiblit, soit je suis plus apaisant que ma réputation ne le laisse croire.
+- EN: You slept, my blade. No knives, no whispers, no blood on the sheets. Either your father's grip is slipping, or I am more soothing than my reputation suggests.
+- FR: Tu as dormi, ma lame. Ni couteaux, ni murmures, ni sang sur les draps. Soit l'emprise de ton père faiblit, soit je suis plus apaisant que ma réputation ne le laisse croire.
 
 **N10R - Gortash** `[Durge, rejected Bhaal]`
-- EN: You slept. No knives, no whispers. I keep waiting for your father's voice to take you back from me, and it keeps not coming. I could grow used to that.
-- FR: Tu as dormi. Ni lames, ni murmures. J'attends sans cesse que la voix de ton père te reprenne à moi, et elle ne vient pas. Je pourrais m'y habituer.
+- EN: You slept, my blade. No knives, no whispers. I keep waiting for your father's voice to take you back from me, and it keeps not coming. I could grow used to that.
+- FR: Tu as dormi, ma lame. Ni couteaux, ni murmures. J'attends sans cesse que la voix de ton père te reprenne à moi, et elle ne vient pas. Je pourrais m'y habituer.
 
 ## Choice D
 

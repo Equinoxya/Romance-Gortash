@@ -34,13 +34,13 @@ You still owe me a dance. I am keeping the debt on my books, with interest.
 **G3** - Gortash
 
 ```
-There you are. I was halfway through a death warrant, and it has lost all interest.
+Ah. My favourite problem. I was halfway through a death warrant, and it has lost all interest.
 ```
 
 **G3D** - Gortash
 
 ```
-Come in. Close the door. Let the city wait. It has had me for years, and you were gone for most of them.
+Come in, my blade. Close the door. Let the city wait. It has had me for years, and you were gone for most of them.
 ```
 
 **G4** - Gortash - three identical nodes, one per identity
@@ -295,7 +295,7 @@ You take the lead. He allows it for exactly three bars, then tests you with a tu
 **N9a2** - Gortash
 
 ```
-Nobody leads me. I find I do not mind it. Tell no one.
+Nobody leads me. Apparently I do not mind it. Tell no one.
 ```
 
 **N9b** - Narrator
@@ -1021,7 +1021,7 @@ It was a mistake. I'm sorry.
 **F3a** - Gortash
 
 ```
-Gondians. Yes. I know precisely how many, I signed for each of them. I told myself it was arithmetic. You have just made the sum come out differently, and I do not thank you for it.
+Gondians. Yes. I know precisely how many, I signed for each of them. I told myself it was a clause in a contract. You have just read it aloud to me, and I do not thank you for it.
 ```
 
 **F3b** - Gortash
@@ -1216,19 +1216,19 @@ He looks away first. You suspect that does not happen often.
 **LETTER1_NAME** - Item name
 
 ```
-Letter Sealed with the Archduke's Crest
+Letter Sealed in Black Wax
 ```
 
 **LETTER1_DESC** - Item description
 
 ```
-Heavy paper, black wax, and a faint trace of machine oil. Someone left it at camp while no one was looking.
+Heavy paper, black wax pressed with the Archduke's crest, and a faint trace of machine oil. No one at camp saw who left it.
 ```
 
 **LETTER1_TEXT** - Item content - three identical nodes, one per identity
 
 ```
-To the hero of the hour,<br><br>Baldur's Gate has a new Archduke, and you had the good taste to attend the occasion. I noticed. I notice most things.<br><br>Ceremony, however, is a poor setting for honest conversation: too many ears, too much applause. I would rather speak with you the way I prefer to do business - privately, and without an audience.<br><br>Come to my office at Wyrm's Rock after dusk. The Steel Watch will be told to expect you. They will not trouble you, provided you do not trouble them.<br><br>Bring your wits. Leave your companions. I promise the wine will be better than whatever you have been drinking in that camp of yours.<br><br>Lord Enver Gortash<br>Archduke of Baldur's Gate<br><br>P.S. Do not mistake this for a summons. I write those in a different hand. This is an invitation, and I extend very few.
+At the coronation, I spent more time watching you than the crowd. I notice most things. I rarely write to them.<br><br>My office, at Wyrm's Rock. After dark. Come alone - the Watch will let you pass.<br><br>No ceremony, no audience. Only the two of us, and a wine far better than your camp deserves.<br><br>E.<br><br>P.S. Burn this, or keep it. I am curious which.
 ```
 
 
@@ -1330,7 +1330,7 @@ You push open the doors. At the far end of the room, by his desk, Gortash is wai
 **AG** - Gortash
 
 ```
-There you are. I was beginning to wonder.
+At last. I was beginning to take it personally.
 ```
 
 **N1** - Narrator
@@ -1348,7 +1348,7 @@ You came. And alone, as asked. You have no idea how rare it is to meet someone w
 **N2D** - Gortash
 
 ```
-There you are. You always did prefer to arrive after dark. Some habits survive anything, it seems - even what was done to you.
+You always did prefer to arrive after dark. Some habits survive anything, it seems - even what was done to you.
 ```
 
 **A1** - Player
@@ -1384,7 +1384,7 @@ Someone with priorities. Good. Sit. It's a Tethyrian red, older than my ambition
 **N3b** - Gortash
 
 ```
-Straight to the ledger. I respect that. What I want, tonight, is one hour in which nobody asks me to sign anything. And your company, which I find I have been curious about.
+Straight to the ledger. I respect that. What I want, tonight, is one hour in which nobody asks me to sign anything. And your company. I have been curious about it for longer than I care to admit.
 ```
 
 **N3c** - Gortash - three identical nodes, one per identity
@@ -1516,7 +1516,7 @@ He turns your hand over and presses his lips to the inside of your wrist, unhurr
 **N9a2** - Gortash
 
 ```
-Well. That was not in my projections. I shall have to revise them.
+Well. That was not in the design. I shall have to redraw it.
 ```
 
 **N9b** - Gortash
@@ -1846,7 +1846,7 @@ This was a mistake. Goodbye, Enver.
 **N7x** - Gortash
 
 ```
-I see. Close the door on your way out. I find I would rather not watch.
+I see. Close the door on your way out. I would rather not watch you go.
 ```
 
 **N7** - Narrator
@@ -1924,19 +1924,19 @@ You wake before dawn. He is already awake, watching the ceiling, one arm around 
 **N10** - Gortash
 
 ```
-Stay until the bells. After that I must be a tyrant again, and you must save the world from people like me. But until the bells.
+Stay until the bells, my favourite problem. After that I must be a tyrant again, and you must save the world from people like me. But until the bells.
 ```
 
 **N10D** - Gortash
 
 ```
-You slept. No knives, no whispers, no blood on the sheets. Either your father's grip is slipping, or I am more soothing than my reputation suggests.
+You slept, my blade. No knives, no whispers, no blood on the sheets. Either your father's grip is slipping, or I am more soothing than my reputation suggests.
 ```
 
 **N10R** - Gortash
 
 ```
-You slept. No knives, no whispers. I keep waiting for your father's voice to take you back from me, and it keeps not coming. I could grow used to that.
+You slept, my blade. No knives, no whispers. I keep waiting for your father's voice to take you back from me, and it keeps not coming. I could grow used to that.
 ```
 
 **D1** - Player
