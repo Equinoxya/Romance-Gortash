@@ -5,7 +5,8 @@ A Baldur's Gate 3 mod that adds a romance path with Lord Enver Gortash, for Tav 
 ## Status
 
 - **Written**: every letter, scene and extension, in English and French, with Tav / Dark Urge variants and masculine / feminine / non-binary variants. 330 localized strings per language.
-- **Built and playing in game** (v1.0.0.4, 2026-11-17): the invitation letter, and the office evening staged in Gortash's real office, with camera cuts, gestures, a wine glass in his hand and a moving mouth.
+- **Built and playing in game** (v1.0.0.15, 2026-11-19): the invitation letter, and the office evening staged in Gortash's real office at night: an arrival cinematic, camera cuts, gestures, a wine glass in his hand, a moving mouth, and our own animations for the hand he offers, the player taking it and the hand kiss.
+- **Changed on 2026-11-19, not seen in game yet**: the hands and the hand kiss redone so the hands rest on each other, the bow after the kiss removed, the hand offer no longer drops, a shorter invitation letter signed "E.", lighter wording for Gortash and pet names after the private night.
 - **Generated and wired, not played yet**: the ball, the private night, the Dark Urge memories, the scene after Orin.
 - **Next**: the to-do list, in French, in `docs/A_faire.md`.
 
@@ -25,8 +26,8 @@ For Tav, this is a new romance. For the Dark Urge, it is a reunion: the two were
 
 | Step | Content | Status |
 |---|---|---|
-| 1 | Invitation letter delivered at camp after the coronation | Draft in `Dialogs/GR_Letter_Invitation.md`, awaiting review |
-| 2 | Evening in his office: flirt dialogue | Draft in `Dialogs/GR_Office_Evening.md`, awaiting review |
+| 1 | Invitation letter delivered at camp after the coronation | In game. Text rewritten on 2026-11-19 (short, signed "E.") |
+| 2 | Evening in his office: flirt dialogue | In game, staged with a timeline and custom animations. Last fixes to test |
 | 3 | Invitation card and ball with a dance | Draft in `Dialogs/GR_Ball.md`, awaiting review |
 | 4 | Second letter and private night (text, fade to black) | Draft in `Dialogs/GR_Private_Night.md`, awaiting review |
 | 5 | Ending where he survives (alliance + romance) | Draft in `Dialogs/GR_Ending.md`, awaiting review |
@@ -61,6 +62,8 @@ Not done, because they need work inside the Toolkit or outside this repository: 
   - `GR_Gift_Wine`: `CONS_Drink_Wine_B`, so it can be drunk. `GR_Gift_Key`: `BASE_KEY`. `GR_Gift_Knife`: a plain dagger (`WPN_HUM_Dagger_A_0`)
   - `GR_Gift_DanceCard`: paper card (`BOOK_Letter_A`); reading it shows its note, since paper items always open a book
 - `tools/build_voice.py`: gives Gortash's lines a moving mouth with silent voice files (see Timelines)
+- `tools/anim/`: animation and timeline scripts. `evening_hands.py` sets the hand offer, the hand kiss, the player's position and the removed gestures in the office timeline: run it after every Toolkit save of `GR_Office_Evening`, then `build_pack.py`. The `arrival_*` scripts build the arrival cinematic. `fix_glb.py` makes a Blender export readable by LSLib.
+- The animation sources (Blender files, exports, `.GR2`) are not in this repository: they live in a separate work folder (`GortashAnim`). `GortashAnim/hands_contact.py` rebuilds the hand-taking and hand-kiss animations so the hands rest on each other.
 - `tools/lsf.py`: reads and writes the Toolkit's uncompressed `.lsf` files (`python tools/lsf.py dump FILE.lsf` to inspect one)
 - `Toolkit/backup/`: the Toolkit files as they were before `build_toolkit.py` first changed them
 - `Localization/English/GortashRomance.loca.xml`: English text, generated
@@ -81,6 +84,7 @@ After editing a dialogue script, run `python3 tools/build_loca.py`. Handles do n
 - English only needs this when someone talks about the player (`[he / she / they]`).
 - French also needs it for agreements (`[venu / venue / ...]`). The non-binary version uses `iel` / `ellui` and wording with no agreement, never the masculine by default.
 - In French, Gortash says "vous" until the private night (step 4), then "tu". The narrator always says "vous". Two exceptions: he goes back to "vous" in the foundry scene, and says "tu" in the Dark Urge's memories.
+- After the private night he has a pet name for the player: "my favourite problem" ("mon problème préféré") for Tav, "my blade" ("ma lame") for the Dark Urge.
 
 In the Toolkit, each `[a / b / c]` line becomes three text variants on the same node, each with its identity tag. `[Tav]` and `[Durge]` are a `REALLY_DARK_URGE` tag check on the node itself, as most game dialogs do it: a variant that tests both the tag and the identity makes the editor report the dialog as invalid.
 
