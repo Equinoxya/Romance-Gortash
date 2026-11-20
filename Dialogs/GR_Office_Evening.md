@@ -159,8 +159,8 @@ All four go to N7.
 | C3 | We are allies, Gortash. Nothing more. | Nous sommes alliés, Gortash. Rien de plus. | `GR_Romance_Declined` | N9c |
 
 **N9a - Narrator**
-- EN: He turns your hand over and presses his lips to the inside of your wrist, unhurried, his eyes never leaving yours. For one unguarded moment, the Archduke looks like a man who has miscounted.
-- FR: Il retourne votre main et pose ses lèvres au creux de votre poignet, sans hâte, sans vous quitter des yeux. L'espace d'un instant, l'Archiduc a l'air d'un homme qui s'est trompé dans ses comptes.
+- EN: He lifts your hand and bows over it, unhurried, until his lips rest on the back of it. When he straightens, for one unguarded moment, the Archduke looks like a man who has miscounted.
+- FR: Il lève votre main et s'incline dessus, sans hâte, jusqu'à poser ses lèvres sur le dos de vos doigts. Quand il se redresse, l'Archiduc a l'air, l'espace d'un instant, d'un homme qui s'est trompé dans ses comptes.
 
 **N9a2 - Gortash**
 - EN: Well. That was not in the design. I shall have to redraw it.

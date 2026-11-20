@@ -317,7 +317,7 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | C1 | Player | all | `h2fa3b5fcgc153g5bc0g8e58g4e334ba16cd1` | *Take his hand.* Then stop calculating and find out. |
 | C2 | Player | all | `hca5b1633g3082g52f0g95d4g981f2ae38900` | Invite me properly next time. I might say yes. |
 | C3 | Player | all | `h36814a90g09d5g5021gb1b3g42eddb39493b` | We are allies, Gortash. Nothing more. |
-| N9a | Narrator | all | `hd9156077gfa3eg563dg9805g29a996c93806` | He turns your hand over and presses his lips to the insid... |
+| N9a | Narrator | all | `hd9156077gfa3eg563dg9805g29a996c93806` | He lifts your hand and bows over it, unhurried, until his... |
 | N9a2 | Gortash | all | `he6f69d14g5defg56e1gae65g7dedcabb07da` | Well. That was not in the design. I shall have to redraw it. |
 | N9b | Gortash | all | `hd88563f1ge323g5d81gbf7fg370675c8a0e9` | Properly. With an orchestra, if need be. You will hear fr... |
 | N9c | Gortash | all | `h4ee4b811gf880g5e1cg8d7dgc4c03ce5c2f8` | As you like. I am a patient man, and the offer does not e... |

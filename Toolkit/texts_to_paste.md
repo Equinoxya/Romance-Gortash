@@ -1510,7 +1510,7 @@ We are allies, Gortash. Nothing more.
 **N9a** - Narrator
 
 ```
-He turns your hand over and presses his lips to the inside of your wrist, unhurried, his eyes never leaving yours. For one unguarded moment, the Archduke looks like a man who has miscounted.
+He lifts your hand and bows over it, unhurried, until his lips rest on the back of it. When he straightens, for one unguarded moment, the Archduke looks like a man who has miscounted.
 ```
 
 **N9a2** - Gortash

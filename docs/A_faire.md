@@ -265,7 +265,7 @@ Juste après la prise de main (choix C1, phase N9a), Gortash lève la main de la
   - pieds fixes (moins de 1 cm) ;
   - mouvement fluide, sans à-coup ;
   - torsion des avant-bras répartie.
-- Attention : le texte de N9a dit « il retourne votre main et pose ses lèvres au creux de votre poignet ». L'animation, elle, embrasse le dos de la main. Il faudra adapter l'un ou l'autre.
+- Texte de N9a adapté le 20/11 à l'animation : « Il lève votre main et s'incline dessus, sans hâte, jusqu'à poser ses lèvres sur le dos de vos doigts… » (avant : « au creux de votre poignet »).
 
 ### 19/11 soir : corrections après le test en jeu (vidéo 21h52)
 
