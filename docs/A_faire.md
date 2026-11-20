@@ -294,3 +294,13 @@ Juste après la prise de main (choix C1, phase N9a), Gortash lève la main de la
 - Le nom du lieu (« Forteresse du roc du dracosir ») s'affiche à la fin de la cinématique quand on vient du camp : le jeu l'affiche en arrivant dans la zone, pas encore traité.
 - Après la soirée, fondu au noir puis retour au camp avec la procédure du bouton « Aller au camp » (`PROC_TeleportToFromCamp`, `GLO_Camp`). L'image revient à l'arrivée (`TeleportedToCamp`), ou au bout de 20 s.
 - Version **1.0.0.21** : Build **21** (le Multitool était déjà à 20) dans le Multitool, puis BG3ModManager (Refresh, Save, Export).
+
+## Le bal (20/11, en cours)
+
+Choix : salle du couronnement, vraie danse animée, héraut et patriars en texte du narrateur.
+
+- Le bal est coupé en deux dialogues, comme le bureau : `GR_Ball_Invitation` (ressource `2e322309-…`, « ce soir / pas ce soir » en refermant le carton ; « Se rendre au bal » pose `GR_Ball_Attended`) et `GR_Ball` (le bal, à partir de N1).
+- `GR_Letters.txt` (Step 3) : fondu au noir, Gortash placé au milieu de la grande salle (2,5 ; 60,91 ; 210,0), tourné comme `GortashAfterCeremonyPos`, le joueur amené devant lui à environ 1,1 m (depuis le camp : `S_Debug_WYR_CeremonyTP`), puis `GR_Ball`. Noir jusqu'à l'affichage du bal. À la fin : Gortash au Bassin morphique s'il y était, le groupe au camp.
+- Données du niveau (Gustav.pak, `GustavDev/Levels/BGO_Main_A/Triggers`) : `S_WYR_WyrmRock_AudienceHallArea` (2,72 ; 59,64 ; 209,67), zone de la cérémonie `WYR_KillDirectorGortash_Ceremony_SceneTrigger` (-12,0 ; 60,9 ; 210,0, 25,75 × 2,3 × 19,7). Des Gardes d'acier se tiennent autour de la salle.
+- Version **1.0.0.22** : Build **22**.
+- Reste : enregistrer les deux dialogues dans l'éditeur, tester la mise en place, générer la timeline, la danse dans Blender.

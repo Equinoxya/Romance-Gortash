@@ -238,9 +238,30 @@ def staged_office():
     return [invitation, arrival, evening]
 
 
+def staged_ball():
+    """Ball split in two dialogs, like the office: the "tonight?" choice when the card is closed,
+    then the ball itself, staged in the audience hall of Wyrm's Rock (GR_Letters.txt, Step 3)."""
+    n = BALL['nodes']
+    invitation = {
+        'name': 'GR_Ball_Invitation', 'source': 'GR_Ball',
+        'synopsis': 'Step 3, part 1. After reading the ball card: go to the ball tonight, or not.',
+        'trigger': 'Started by GR_Letters.txt when the player closes the ball card. '
+                   '"Go to the ball" sets GR_Ball_Attended; the script then moves the party into the audience hall.',
+        'root': 'L0',
+        'nodes': {'L0': n['L0'], 'L1': choice([], set={'GR_Ball_Attended': True}), 'L2': n['L2'], 'L3': n['L3']},
+    }
+    ball_nodes = {k: v for k, v in n.items() if not k.startswith('L')}
+    ball_nodes['N1'] = line('narrator', ['N2'], root=True, check={'GR_Ball_Invited': True})
+    ball = dict(BALL, root='N1', nodes=ball_nodes,
+                synopsis="Step 3, part 2. The ball in the audience hall of Wyrm's Rock: the court watches, "
+                         'Gortash claims his dance. Herald and patriar lines are narrator text.',
+                trigger='Started by GR_Letters.txt once Gortash and the player have been moved into the audience hall.')
+    return [invitation, ball]
+
+
 def _scenes():
-    # The office evening is played as two dialogs (staged in Gortash's office, see GR_Letters.txt)
-    return staged_office() + [BALL, NIGHT] + MEMORIES + [ORIN]
+    # The office evening and the ball are played as two dialogs each (staged, see GR_Letters.txt)
+    return staged_office() + staged_ball() + [NIGHT] + MEMORIES + [ORIN]
 
 
 def memory(n, name, title, after):

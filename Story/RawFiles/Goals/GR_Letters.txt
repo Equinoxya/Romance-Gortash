@@ -526,7 +526,10 @@ TemplateAddTo((ITEMROOT)GR_Card_Ball_adb0c465-2e66-57cd-b97e-494e2c0b0186, _Play
 TemplateAddTo((ITEMROOT)GR_Gift_Wine_9755fa0f-4785-5836-9052-7962191206aa, _Player, 1, 1);
 SetFlag((FLAG)GR_Ball_Invited_bb642d72-c815-514d-93f4-6e0fc7deb142, _Player);
 
-// Reading the ball card asks whether to go tonight, like the invitation letter
+// Staged like the office evening (Step 2). Closing the card starts GR_Ball_Invitation: go tonight,
+// or not. "Go to the ball" sets GR_Ball_Attended: fade to black, Gortash is placed in the middle of the
+// audience hall (the coronation room, AudienceHallArea), the player in front of him, and GR_Ball plays
+// there. Afterwards Gortash goes back to the Morphic Pool if he was there, and the party goes to camp.
 IF
 GameBookInterfaceClosed(_Item, _Player)
 AND
@@ -536,18 +539,233 @@ _Template == GR_Card_Ball_adb0c465-2e66-57cd-b97e-494e2c0b0186
 AND
 NOT DB_GR_BallAttended(1)
 AND
+NOT DB_GR_BallStaging(1)
+AND
 NOT DB_GR_RomanceEnded(1)
 AND
 NOT DB_PermaDefeated(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac)
 AND
-QRY_StartDialog((DIALOGRESOURCE)GR_Ball_4141ea7e-b5ed-5ceb-92c1-542da3c41b6c, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+QRY_StartDialog((DIALOGRESOURCE)GR_Ball_Invitation_2e322309-eea0-5a37-a65d-ad35c5dea5e7, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
 THEN
-DB_NOOP(1);
+DB_GR_BallInvitationPlayer(_Player);
 
 IF
 FlagSet((FLAG)GR_Ball_Attended_c01bdc75-f8ca-5b69-b37a-be8ae6fbc818, _, _)
 THEN
 DB_GR_BallAttended(1);
+
+// "Not tonight"
+IF
+DialogEnded((DIALOGRESOURCE)GR_Ball_Invitation_2e322309-eea0-5a37-a65d-ad35c5dea5e7, _)
+AND
+DB_GR_BallInvitationPlayer(_Player)
+AND
+NOT DB_GR_BallAttended(1)
+THEN
+NOT DB_GR_BallInvitationPlayer(_Player);
+
+// "Go to the ball": fade out, then move Gortash and the player into the audience hall
+IF
+DialogEnded((DIALOGRESOURCE)GR_Ball_Invitation_2e322309-eea0-5a37-a65d-ad35c5dea5e7, _)
+AND
+DB_GR_BallInvitationPlayer(_Player)
+AND
+DB_GR_BallAttended(1)
+AND
+NOT DB_GR_BallStaging(1)
+THEN
+DB_GR_BallStaging(1);
+ScreenFadeTo(_Player, 1.5, 0, "GR_Ball_FadeOut");
+
+IF
+ScreenFadeDone(_, "GR_Ball_FadeOut")
+AND
+DB_GR_BallStaging(1)
+AND
+NOT DB_GR_Ball_Teleporting(1)
+THEN
+DB_GR_Ball_Teleporting(1);
+TimerLaunch("GR_Ball_Timeout", 30000);
+PROC_GR_Ball_RememberWhereGortashWas();
+// Middle of the audience hall, on the floor in front of the dais (AudienceHallArea: 2.7, 59.6, 209.7)
+TeleportToPosition(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, 2.5, 60.91, 210.0, "GR_Ball_GortashArrived", 0, 0, 0, 0, 1);
+
+PROC
+PROC_GR_Ball_RememberWhereGortashWas()
+AND
+DB_GlobalFlag(WYR_KillDirectorGortash_Event_TeleportedToUndercity_9914f986-f994-4001-9493-d943cb67e35a)
+THEN
+DB_GR_Ball_GortashWasAtMorphicPool(1);
+
+IF
+EntityEvent(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Ball_GortashArrived")
+AND
+DB_GR_BallStaging(1)
+THEN
+// Turned towards the dais and the throne (GortashAfterCeremonyPos faces the hall: turn the other way
+// would show his back to it; the evening's timeline films whatever way he faces)
+LookFromTrigger((CHARACTER)S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_WYR_KillDirectorGortash_GortashAfterCeremonyPos_dd449a60-f892-4170-bdef-26f24a5afd84, 0);
+PROC_GR_Ball_BringPlayer();
+
+PROC
+PROC_GR_Ball_BringPlayer()
+AND
+DB_CurrentLevel("BGO_Main_A")
+AND
+DB_GR_BallInvitationPlayer(_Player)
+THEN
+TeleportTo(_Player, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Ball_PlayerArrived", 0, 1, 1, 0, 1);
+
+PROC
+PROC_GR_Ball_BringPlayer()
+AND
+NOT DB_CurrentLevel("BGO_Main_A")
+THEN
+PROC_TeleportPartiesTo((TRIGGER)S_Debug_WYR_CeremonyTP_cbee66cf-6ba2-44ab-832a-d8fd4ce351a3, "GR_Ball_LevelArrived");
+
+IF
+EntityEvent(_Player, "GR_Ball_LevelArrived")
+AND
+DB_GR_BallInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_BallStaging(1)
+THEN
+TeleportTo(_Player, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, "GR_Ball_PlayerArrived", 0, 1, 1, 0, 1);
+
+// As in the office: about 1.1 m from him, on the line between them
+IF
+EntityEvent(_Player, "GR_Ball_PlayerArrived")
+AND
+DB_GR_BallInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_BallStaging(1)
+AND
+GetPosition(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _GX, _GY, _GZ)
+AND
+GetPosition(_Player, _PX, _PY, _PZ)
+AND
+RealSubtract(_PX, _GX, _DX)
+AND
+RealSubtract(_PZ, _GZ, _DZ)
+AND
+RealProduct(_DX, 0.65, _SX)
+AND
+RealProduct(_DZ, 0.65, _SZ)
+AND
+RealSum(_GX, _SX, _NX)
+AND
+RealSum(_GZ, _SZ, _NZ)
+THEN
+TeleportToPosition(_Player, _NX, _PY, _NZ, "GR_Ball_PlayerCloser", 0, 0, 0, 0, 1);
+
+IF
+EntityEvent(_Player, "GR_Ball_PlayerCloser")
+AND
+DB_GR_BallInvitationPlayer((CHARACTER)_Player)
+AND
+DB_GR_BallStaging(1)
+THEN
+TimerLaunch("GR_Ball_StartDelay", 1500);
+
+IF
+TimerFinished("GR_Ball_StartDelay")
+AND
+DB_GR_BallInvitationPlayer(_Player)
+AND
+DB_GR_BallStaging(1)
+AND
+NOT DB_GR_Ball_Started(1)
+AND
+QRY_StartDialog((DIALOGRESOURCE)GR_Ball_4141ea7e-b5ed-5ceb-92c1-542da3c41b6c, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
+THEN
+DB_GR_Ball_Started(1);
+
+// Black until the ball is on screen (the office showed the interface for 0.6 s otherwise)
+IF
+DialogStarted((DIALOGRESOURCE)GR_Ball_4141ea7e-b5ed-5ceb-92c1-542da3c41b6c, _)
+AND
+DB_GR_BallInvitationPlayer(_Player)
+THEN
+TimerLaunch("GR_Ball_Shown", 800);
+
+IF
+TimerFinished("GR_Ball_Shown")
+AND
+DB_GR_BallInvitationPlayer(_Player)
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Ball_FadeOut");
+
+// Safety: the ball never started (a teleport did not finish, another dialog took Gortash)
+IF
+TimerFinished("GR_Ball_Timeout")
+AND
+DB_GR_BallStaging(1)
+AND
+NOT DB_GR_Ball_Started(1)
+AND
+DB_GR_BallInvitationPlayer(_Player)
+THEN
+ClearScreenFade(_Player, 1.5, "GR_Ball_FadeOut");
+PROC_GR_Ball_Cleanup(_Player);
+
+// Ball over: fade, Gortash back to the Morphic Pool if he was there, the party to camp
+IF
+DialogEnded((DIALOGRESOURCE)GR_Ball_4141ea7e-b5ed-5ceb-92c1-542da3c41b6c, _)
+AND
+DB_GR_Ball_Started(1)
+AND
+DB_GR_BallInvitationPlayer(_Player)
+THEN
+ScreenFadeTo(_Player, 1.5, 0, "GR_Ball_FadeBack");
+
+IF
+ScreenFadeDone(_, "GR_Ball_FadeBack")
+AND
+DB_GR_Ball_GortashWasAtMorphicPool(1)
+THEN
+TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_END_MorphicGortashPoint_6bf2ed03-4bc6-4383-b17a-1b8fc71c8082, "");
+
+IF
+ScreenFadeDone(_, "GR_Ball_FadeBack")
+AND
+DB_GR_BallInvitationPlayer(_Player)
+AND
+NOT DB_GR_Ball_GoingToCamp(_Player)
+THEN
+DB_GR_Ball_GoingToCamp(_Player);
+TimerLaunch("GR_Ball_CampTimeout", 20000);
+PROC_TeleportToFromCamp(_Player);
+
+IF
+TeleportedToCamp(_Player)
+AND
+DB_GR_Ball_GoingToCamp(_Player)
+THEN
+PROC_GR_Ball_BackInCamp(_Player);
+
+IF
+TimerFinished("GR_Ball_CampTimeout")
+AND
+DB_GR_Ball_GoingToCamp(_Player)
+THEN
+PROC_GR_Ball_BackInCamp(_Player);
+
+PROC
+PROC_GR_Ball_BackInCamp((CHARACTER)_Player)
+THEN
+NOT DB_GR_Ball_GoingToCamp(_Player);
+TimerCancel("GR_Ball_CampTimeout");
+ClearScreenFade(_Player, 1.5, "GR_Ball_FadeBack");
+PROC_GR_Ball_Cleanup(_Player);
+
+PROC
+PROC_GR_Ball_Cleanup((CHARACTER)_Player)
+THEN
+NOT DB_GR_BallInvitationPlayer(_Player);
+NOT DB_GR_BallStaging(1);
+NOT DB_GR_Ball_Teleporting(1);
+NOT DB_GR_Ball_Started(1);
+NOT DB_GR_Ball_GortashWasAtMorphicPool(1);
 //END_REGION
 
 //REGION Step 4 - second letter, after the ball
