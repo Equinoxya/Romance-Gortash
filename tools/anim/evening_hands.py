@@ -105,7 +105,9 @@ def main():
             print('hand kiss: added', src)
         setattr_(c, 'StartTime', s, 'float'); setattr_(c, 'EndTime', s + ACCEPT_LEN, 'float')
         setattr_(c, 'PhaseIndex', ph, 'int32'); setattr_(c, 'AnimationSourceId', src, 'guid')
-        setattr_(c, 'FadeIn', 0.3, 'double'); setattr_(c, 'FadeOut', 0.3, 'double')
+        # FadeOut 0: the kiss starts on its last pose (within 3 degrees); a fade let the idle pose
+        # back in between the two and the arms dipped (game 20/11)
+        setattr_(c, 'FadeIn', 0.3, 'double'); setattr_(c, 'FadeOut', 0.0, 'double')
         setattr_(c, 'AnimationGroup', group, 'guid')
     for c in comps.children:
         if c.attr('Type') == 'TLShot' and c.attr('PhaseIndex') == ph:
@@ -119,7 +121,7 @@ def main():
     print('hand kiss: bow after the kiss removed' if len(comps.children) < before else 'hand kiss: no bow to remove')
     kisses = [c for c in comps.children if c.attr('Type') == 'TLAnimation' and c.attr('AnimationSourceId') in KISS_ANIMS]
     for c in kisses:
-        setattr_(c, 'FadeOut', KISS_FADE_OUT, 'double')
+        setattr_(c, 'FadeIn', 0.0, 'double'); setattr_(c, 'FadeOut', KISS_FADE_OUT, 'double')
     print(f'hand kiss: {len(kisses)} kiss animations, fade out {KISS_FADE_OUT} s'
           + ('' if len(kisses) == 2 else '  !! expected 2: re-add them in the Toolkit'))
 
