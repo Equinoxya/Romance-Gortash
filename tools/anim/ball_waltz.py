@@ -33,13 +33,17 @@ RES_DIR = os.path.join(DATA, 'Public', MOD, 'Content', 'Assets', '[PAK]_GR_Anima
 # The game did not play an animation started from an offset (AnimationPlayStartOffset, game 20/11):
 # only the first 13 s of the waltz showed, then both stood still. So the waltz is cut into four
 # animations of our own, each starting at its first frame (GortashAnim/waltz_export.py, Blender):
-PARTS = {'In': 13.0, 'Dance': 9.5, 'Kiss': 7.5, 'Part': 5.167}   # durations, s
-# In: 0-13 s of the waltz (walk up, hand, slow dance); Dance: 3.5-13 s; Kiss: 13.5-21 s; Part: 23.5 s-end
+PARTS = {'In': 11.8333, 'Loop': 4.0833, 'Kiss': 9.1667, 'Part': 7.6667}   # durations, s (waltz_export.py)
+# In ends on Loop's first pose and Loop on its own first pose: In -> Loop -> Loop... with no fade,
+# and Loop is Continuous (the game repeats it to the end of the component, like GR_HandOffer_LOOP).
+# The first cut (Dance restarted every 9.5 s with fades) was jerky (game 20/11).
 SKELETON = {'Gortash': '044ab023-7076-77e6-73c2-d0f26fca0776', 'Joueuse': 'edda91cd-d2be-3296-087c-45477f36daaa'}
 ANIMS = {f'GR_Waltz{p}_{h}': (stable_uuid(f'GR/anim/GR_Waltz{p}_{h}'),
                               f'Public/{MOD}/Assets/Animations/GR_Waltz{p}_{h}.GR2', SKELETON[h], d)
          for p, d in PARTS.items() for h in SKELETON}
-OLD = [stable_uuid('GR/anim/GR_Waltz_Gortash'), stable_uuid('GR/anim/GR_Waltz_Joueuse')]   # first version
+OLD = [stable_uuid('GR/anim/GR_Waltz_Gortash'), stable_uuid('GR/anim/GR_Waltz_Joueuse'),
+       stable_uuid('GR/anim/GR_WaltzDance_Gortash'), stable_uuid('GR/anim/GR_WaltzDance_Joueuse')]   # earlier cuts
+LOOP_IDS = [ANIMS[f'GR_WaltzLoop_{h}'][0] for h in SKELETON]
 FADE = 0.6
 LINES = {   # line -> what of the waltz it shows
     'N9a': 'start', 'N9b': 'start', 'N9d': 'start',
@@ -91,13 +95,16 @@ def write_resources():
 
 
 def pieces(kind, s, e):
-    """[(start, end, part)] covering the phase s..e, each part played from its first frame."""
-    first = {'start': 'In', 'dance': 'Dance', 'kiss': 'Kiss', 'part': 'Part'}[kind]
-    out, t, part = [], s, first
-    while t < e - 0.05:
-        end = min(e, t + PARTS[part])
-        out.append((t, end, part)); t = end
-        part = 'Dance' if kind != 'part' else 'Part'
+    """[(start, end, part, fade in, continuous)] covering the phase s..e."""
+    if kind == 'part':
+        return [(s, e, 'Part', FADE, False)]
+    first = {'start': 'In', 'dance': None, 'kiss': 'Kiss'}[kind]
+    out, t = [], s
+    if first:
+        end = min(e, s + PARTS[first])
+        out.append((s, end, first, 0.3 if kind == 'start' else FADE, False)); t = end
+    if t < e - 0.05:   # then the loop, repeated by the game to the end of the line
+        out.append((t, e, 'Loop', 0.0 if first else FADE, True))
     return out
 
 
@@ -136,13 +143,16 @@ def main():
         if i is None:
             continue
         s, e = starts[i]
-        for k, (a, b, part) in enumerate(pieces(kind, s, e)):
+        parts = pieces(kind, s, e)
+        for k, (a, b, part, fade_in, continuous) in enumerate(parts):
             for who, actor, name in (('G', gortash, f'GR_Waltz{part}_Gortash'), ('P', player, f'GR_Waltz{part}_Joueuse')):
                 attrs = [('Type', 'LSString', 'TLAnimation'), ('ID', 'guid', nid(f'{who}{i}.{k}')),
                          ('StartTime', 'float', round(a, 3)), ('EndTime', 'float', round(b, 3)),
                          ('PhaseIndex', 'int32', i), ('AnimationSourceId', 'guid', ANIMS[name][0])]
-                attrs += [('FadeIn', 'double', FADE if (k or kind != 'start') else 0.3),
-                          ('FadeOut', 'double', FADE), ('AnimationGroup', 'guid', group[who])]
+                fade_out = FADE if k == len(parts) - 1 else 0.0
+                attrs += [('FadeIn', 'double', fade_in), ('FadeOut', 'double', fade_out),
+                          ('AnimationGroup', 'guid', group[who])]
+                if continuous: attrs.append(('Continuous', 'bool', True))
                 comps.children.append(node('EffectComponent', attrs, [node('Actor', [('UUID', 'guid', actor)])]))
         # the player at the waltz's distance, facing him, in his frame
         key = lambda v, t: node('Key', [('Time', 'float', s), ('InterpolationType', 'uint8', 2), ('Value', t, v)])

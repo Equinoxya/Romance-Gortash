@@ -14,7 +14,8 @@ from build_toolkit import DATA, MOD, REPO, stable_uuid
 OUT = os.path.join(REPO, 'build', 'GortashRomance')
 KEEP_LOOPING = {stable_uuid('GR/anim/GR_HandOffer_LOOP'),
                 '7bd8e368-5ad3-487b-ab93-f868d968590f',   # HUM_M_Rig_DFLT_CINE_Walk_01
-                '5470292e-5bb1-4470-a317-950b96e27d32'}   # CINE_Read_Map_01 (Gortash at his desk, arrival)
+                '5470292e-5bb1-4470-a317-950b96e27d32',   # CINE_Read_Map_01 (Gortash at his desk, arrival)
+                stable_uuid('GR/anim/GR_WaltzLoop_Gortash'), stable_uuid('GR/anim/GR_WaltzLoop_Joueuse')}   # ball dance
 
 
 def write_loca(entries, path):
