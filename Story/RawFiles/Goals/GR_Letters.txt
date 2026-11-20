@@ -429,7 +429,7 @@ DB_GR_Office_EveningStarted(1)
 AND
 DB_GR_OfficeInvitationPlayer(_Player)
 THEN
-ScreenFadeTo(_Player, 1.5, 0, "GR_Office_FadeBack");
+ScreenFadeTo(_Player, 0.4, 0, "GR_Office_FadeBack");   // short: the interface shows during the fade (video 20/11)
 
 IF
 ScreenFadeDone(_, "GR_Office_FadeBack")
@@ -716,7 +716,7 @@ DB_GR_Ball_Started(1)
 AND
 DB_GR_BallInvitationPlayer(_Player)
 THEN
-ScreenFadeTo(_Player, 1.5, 0, "GR_Ball_FadeBack");
+ScreenFadeTo(_Player, 0.4, 0, "GR_Ball_FadeBack");   // short: the interface shows during the fade (video 20/11)
 
 IF
 ScreenFadeDone(_, "GR_Ball_FadeBack")
