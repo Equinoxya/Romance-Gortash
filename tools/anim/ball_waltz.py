@@ -53,6 +53,12 @@ MARK = 'GR_ball_waltz'
 # in the timeline's EnterPhaseSoundEvents / ExitSoundEvents regions (the dialog's music), not TLSoundEvent.
 MUSIC_ENTER = '9ca172cf-da90-46d6-8ce2-98206eb00c2a'   # EPI_Epilogue_EnterParty_Music_Enter
 MUSIC_EXIT = '03e5f847-fc44-431e-83a9-f91d9dc986a9'    # EPI_Epilogue_EnterParty_Music_Exit
+# Camera: the generated timeline only has close-ups, which filmed the inside of her hair during the
+# dance (game 20/11). The dance lines use the office's side two-shot (GR_cam_TWOSHOT_side, played in
+# game on 17/11), copied into GR_Ball_Scene.lsx with a camera actor of its own.
+TWOSHOT = '7c1e2a90-3b5d-4f62-9a18-6d0e4b2f8c11'
+SCENES_DIR = os.path.join(DATA, 'Public', MOD, 'Timeline', 'Generated')
+CAMERA_LINES = list(LINES) + ['N7']
 MUSIC_FROM = 'N7'                                      # "The orchestra begins something slow"
 MUSIC_UNTIL = ['N13', 'N9e', 'N9x']                    # the music ends / no dance / refused
 
@@ -162,8 +168,56 @@ def main():
               node('TransformChannel', [], [node('Keys', [], [frame])])])]))
         done.append(f'{line}:{kind}')
     set_music(d, phase_of)
+    set_camera(content, comps, phase_of, gortash)
     lsf.write(d, TL)
     print('waltz on', ', '.join(done))
+
+
+def set_camera(content, comps, phase_of, gortash):
+    import re
+    office = open(os.path.join(SCENES_DIR, 'GR_Office_Evening_Scene.lsx'), encoding='utf-8').read()
+    ball_path = os.path.join(SCENES_DIR, SCENE + '_Scene.lsx')
+    ball = open(ball_path, encoding='utf-8').read()
+    if 'GR_cam_TWOSHOT_side' not in ball:
+        lines = office.split(chr(10))
+        a = next(i for i, l in enumerate(lines) if l.strip() == '<node id="TLCameras">' and l.startswith(' ' * 16 + '<'))
+        b = next(i for i, l in enumerate(lines) if i > a and l.startswith(' ' * 16 + '</node>'))
+        block = chr(10).join(lines[a:b + 1])
+        mark = ' ' * 16 + '<node id="TLInheritedScenes">'
+        assert mark in ball, 'GR_Ball_Scene.lsx layout changed'
+        ball = ball.replace(mark, block + chr(10) + mark, 1)
+        open(ball_path, 'w', encoding='utf-8', newline='').write(ball)
+        print('camera     GR_cam_TWOSHOT_side added to GR_Ball_Scene.lsx')
+    # camera actor, copied from a generated one
+    actor_id = nid('cam/twoshot')
+    holder = None
+    for n in content.children:
+        if n.name != 'TimelineActorData': continue
+        for c in n.children:
+            objs = [c] if c.name == 'Object' else c.children
+            for o in objs:
+                if o.name == 'Object' and any(v.name == 'Value' and v.attr('ActorTypeId') == 'scenecam' for v in o.children):
+                    holder = (c if c.name != 'Object' else n, o); break
+            if holder: break
+    parent, model = holder
+    parent.children = [o for o in parent.children if o.attr('MapKey') != actor_id]
+    import copy
+    cam = copy.deepcopy(model)
+    cam.attrs = [(a, t, actor_id if a == 'MapKey' else v) for a, t, v in cam.attrs]
+    for v in cam.children:
+        if v.name == 'Value':
+            v.attrs = [(a, t, {'Camera': TWOSHOT, 'AttachTo': gortash, 'LookAt': gortash}.get(a, v_)) for a, t, v_ in v.attrs]
+    parent.children.append(cam)
+    shots = 0
+    for line in CAMERA_LINES:
+        i = phase_of.get(stable_uuid(f'{SCENE}/node/{line}'))
+        if i is None: continue
+        for c in comps.children:
+            if c.attr('Type') == 'TLShot' and c.attr('PhaseIndex') == i:
+                for cc in c.children:
+                    if cc.name == 'CameraContainer':
+                        cc.attrs = [(a, t, actor_id if a == 'Object' else v) for a, t, v in cc.attrs]; shots += 1
+    print(f'camera     side two-shot on {shots} shots of the dance')
 
 
 def set_music(d, phase_of):
