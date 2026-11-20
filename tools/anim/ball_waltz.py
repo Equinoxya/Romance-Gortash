@@ -49,6 +49,12 @@ LINES = {   # line -> what of the waltz it shows
 }
 DANCE_DIST = -1.22     # the player in front of Gortash, in his Dummy_Root frame
 MARK = 'GR_ball_waltz'
+# Music: the epilogue party's (EPI_Epilogue_EnterParty), the way that timeline plays it: sound events
+# in the timeline's EnterPhaseSoundEvents / ExitSoundEvents regions (the dialog's music), not TLSoundEvent.
+MUSIC_ENTER = '9ca172cf-da90-46d6-8ce2-98206eb00c2a'   # EPI_Epilogue_EnterParty_Music_Enter
+MUSIC_EXIT = '03e5f847-fc44-431e-83a9-f91d9dc986a9'    # EPI_Epilogue_EnterParty_Music_Exit
+MUSIC_FROM = 'N7'                                      # "The orchestra begins something slow"
+MUSIC_UNTIL = ['N13', 'N9e', 'N9x']                    # the music ends / no dance / refused
 
 
 def nid(name):
@@ -155,8 +161,29 @@ def main():
               chan(key(DANCE_DIST, 'float')), chan(key([0.0, 1.0, 0.0, 0.0], 'fvec4')), node('TransformChannel'),
               node('TransformChannel', [], [node('Keys', [], [frame])])])]))
         done.append(f'{line}:{kind}')
+    set_music(d, phase_of)
     lsf.write(d, TL)
     print('waltz on', ', '.join(done))
+
+
+def set_music(d, phase_of):
+    region = {r.name: r for r in d['regions']}
+    def event(eid, typ='SoundEvent'):
+        return node(typ, [('EventID', 'guid', eid), ('SoundType', 'uint8', 1)])
+    def phase_map(name, entries):
+        m = [c for c in region[name].children if c.name == 'SoundEventMap'][0]
+        mine = {i for i, _ in entries}
+        m.children = [o for o in m.children if o.attr('MapKey') not in mine]
+        for i, eid in entries:
+            m.children.append(node('Object', [('MapKey', 'uint64', i)], [node('SoundEventMap', [], [event(eid)])]))
+    start = phase_of.get(stable_uuid(f'{SCENE}/node/{MUSIC_FROM}'))
+    stops = [phase_of[stable_uuid(f'{SCENE}/node/{n}')] for n in MUSIC_UNTIL if stable_uuid(f'{SCENE}/node/{n}') in phase_of]
+    if start is None:
+        print('music: no phase for', MUSIC_FROM); return
+    phase_map('EnterPhaseSoundEvents', [(start, MUSIC_ENTER)] + [(i, MUSIC_EXIT) for i in stops])
+    ex = region['ExitSoundEvents']   # and when the dialog ends, whatever the path
+    ex.children = [c for c in ex.children if c.attr('EventID') != MUSIC_EXIT] + [event(MUSIC_EXIT, 'GlobalSoundEvent')]
+    print(f'music: epilogue party music from phase {start} ({MUSIC_FROM}), stopped in phases {stops} and at the end')
 
 
 if __name__ == '__main__':
