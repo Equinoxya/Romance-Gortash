@@ -43,6 +43,15 @@ CLOSE_NODES = [STEP_NODE, KISS_NODE] + HIDDEN_PLACE_NODES   # + the hand-offer l
 BOW_ANIM = '85cc45da-8f37-49e4-af64-1737fcf56c5b'
 # Hand-kiss animations (added in the compiled file): the hands let go over 1 s, not 0.3 s (game 19/11)
 KISS_ANIMS, KISS_FADE_OUT = ['8357d7d4-ef4d-5769-a2c3-d5aa4d2d9349', '80c04527-b35b-50fa-9ced-cba8acc40c88'], 1.0
+# The player stands in front of Gortash for the whole evening, not from N6 on (game 20/11: she moved
+# in the middle of the talk). The 0.3 s fade between the arrival cinematic and the evening hides the move.
+CLOSE_EVERYWHERE = True
+# No line filmed the player any more (game 20/11). On the long lines where he talks about her, the
+# end of the line cuts to her face (camera actor of cam_player_MCU, attached to the player).
+PLAYER_CAM = 'c2b18d1e-cdc9-43e9-abb1-dd86a03824e5'
+REACTION_AT = 0.65   # share of the line on Gortash before the cut to her
+REACTION_NODES = {   # node -> line
+    'N2': None, 'N2D': None, 'N3b': None, 'N3d': None, 'N5': None, 'N5D': None, 'N6d': None, 'N9c': None}
 
 
 def nid(name):
@@ -135,6 +144,8 @@ def main():
     # The player close to Gortash, one transform per phase
     close = sorted({i for i, p in enumerate(phases) if p.attr('DialogNodeId') in CLOSE_NODES}
                    | {c.attr('PhaseIndex') for c in anims if c.attr('AnimationSourceId') == OFFER_IN})
+    if CLOSE_EVERYWHERE:
+        close = list(range(len(phases)))
     ours = {nid(f'close{i}') for i in range(len(phases))}   # previous run
     comps.children = [c for c in comps.children if c.attr('ID') not in ours]
     N = lambda name, attrs=(), children=(): _node(name, attrs, children)
@@ -154,6 +165,25 @@ def main():
               chan(key(CLOSE_Z, 'float')), chan(key(CLOSE_ROT, 'fvec4')), N('TransformChannel'),
               N('TransformChannel', [], [N('Keys', [], [frame])])])]))
     print(f'player {CLOSE_Z} m in front of Gortash in phases {close}')
+    # Reaction shots on the player at the end of the long lines about her
+    from build_toolkit import stable_uuid
+    react = {stable_uuid(f'GR_Office_Evening/node/{n}') for n in REACTION_NODES}
+    mine = {nid(f'react{i}') for i in range(len(phases))}
+    comps.children = [c for c in comps.children if c.attr('ID') not in mine]   # previous run
+    added = []
+    for i, p in enumerate(phases):
+        if p.attr('DialogNodeId') not in react: continue
+        s, e = starts[i]
+        shots = [c for c in comps.children if c.attr('Type') == 'TLShot' and c.attr('PhaseIndex') == i]
+        if len(shots) != 1: continue
+        cut = round(s + REACTION_AT * (e - s), 2)
+        setattr_(shots[0], 'EndTime', cut); setattr_(shots[0], 'IsSnappedToEnd', False, 'bool')
+        comps.children.append(N('EffectComponent', [
+            ('Type', 'LSString', 'TLShot'), ('ID', 'guid', nid(f'react{i}')),
+            ('StartTime', 'float', cut), ('EndTime', 'float', e), ('PhaseIndex', 'int32', i),
+            ('IsSnappedToEnd', 'bool', True)], [N('CameraContainer', [('Object', 'guid', PLAYER_CAM)])]))
+        added.append(i)
+    print(f'reaction shots on the player in phases {added}')
     lsf.write(d, TL)
 
 
