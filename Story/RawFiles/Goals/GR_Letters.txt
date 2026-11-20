@@ -98,7 +98,7 @@ TemplateAddTo((ITEMROOT)GR_Letter_Invitation_NB_b2e4a9d7-3c58-4f06-8d1a-7e9c25f4
 // office and the player, alone, next to him (from camp, the party first travels to
 // Wyrm's Rock), then
 // GR_Office_Evening plays there with its timeline. Afterwards Gortash goes back to the
-// Morphic Pool if that is where he was; the player stays in the office.
+// Morphic Pool if that is where he was, and the party goes back to camp.
 // Game objects and calls, as Act3_WYR_KillDirectorGortash uses them:
 //   S_WYR_GortashsPositionInOffice, S_Debug_Teleport_WYR_GortashsOffice,
 //   S_END_MorphicGortashPoint, WYR_KillDirectorGortash_Event_TeleportedToUndercity.
@@ -372,6 +372,22 @@ AND
 QRY_StartDialog((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, _Player)
 THEN
 DB_GR_Office_EveningStarted(1);
+
+// The dialog takes a moment to show after QRY_StartDialog: clearing the fade right away showed the
+// game's interface (and an inventory left open) for about 0.6 s between the arrival and the evening
+// (video, 20/11). Wait for the evening to start, then a little more, under the black screen.
+IF
+DialogStarted((DIALOGRESOURCE)GR_Office_Evening_3c7b94ed-b2fc-5035-90cc-9e26425f8993, _)
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
+TimerLaunch("GR_Office_EveningShown", 800);
+
+IF
+TimerFinished("GR_Office_EveningShown")
+AND
+DB_GR_OfficeInvitationPlayer(_Player)
+THEN
 ClearScreenFade(_Player, 1.5, "GR_Office_FadeOut");
 ClearScreenFade(_Player, 0.6, "GR_Office_ArrivalCut");
 
@@ -422,11 +438,40 @@ DB_GR_Office_GortashWasAtMorphicPool(1)
 THEN
 TeleportTo(S_GLO_Gortash_b878a854-f790-4999-95c4-3f20f00f65ac, S_END_MorphicGortashPoint_6bf2ed03-4bc6-4383-b17a-1b8fc71c8082, "");
 
+// Then back to camp, as the "Go to camp" button does (GLO_Camp: PROC_TeleportToFromCamp), under the
+// black screen; the picture comes back once there (TeleportedToCamp), or after 20 s if the camp is
+// out of reach.
 IF
 ScreenFadeDone(_, "GR_Office_FadeBack")
 AND
 DB_GR_OfficeInvitationPlayer(_Player)
+AND
+NOT DB_GR_Office_GoingToCamp(_Player)
 THEN
+DB_GR_Office_GoingToCamp(_Player);
+PROC_GR_Office_Day();
+TimerLaunch("GR_Office_CampTimeout", 20000);
+PROC_TeleportToFromCamp(_Player);
+
+IF
+TeleportedToCamp(_Player)
+AND
+DB_GR_Office_GoingToCamp(_Player)
+THEN
+PROC_GR_Office_BackInCamp(_Player);
+
+IF
+TimerFinished("GR_Office_CampTimeout")
+AND
+DB_GR_Office_GoingToCamp(_Player)
+THEN
+PROC_GR_Office_BackInCamp(_Player);
+
+PROC
+PROC_GR_Office_BackInCamp((CHARACTER)_Player)
+THEN
+NOT DB_GR_Office_GoingToCamp(_Player);
+TimerCancel("GR_Office_CampTimeout");
 ClearScreenFade(_Player, 1.5, "GR_Office_FadeBack");
 PROC_GR_Office_Cleanup(_Player);
 

@@ -287,3 +287,10 @@ Juste après la prise de main (choix C1, phase N9a), Gortash lève la main de la
 - Baisemain : les bras redescendaient un instant entre la prise de main et le baisemain (même cause que la main tendue : fondu de sortie de 0,3 s puis fondu d'entrée de 0,3 s). Fondus à 0 entre les deux (les poses se raccordent à moins de 3° près), dans `evening_hands.py`.
 - Placement : la joueuse est devant Gortash (0,68 m) dès le début de la soirée, plus seulement à partir de N6 (`CLOSE_EVERYWHERE` dans `evening_hands.py`). Le fondu de 0,3 s entre la cinématique d'arrivée et la soirée cache le déplacement.
 - Plans sur la joueuse : plus aucune réplique ne la filmait (la seule, N9a, était passée sur le plan à deux). Sur les longues répliques où il parle d'elle (N2, N2D, N3b, N3d, N5, N5D, N6d, N9c), les 35 derniers pourcents de la réplique passent sur `cam_player_MCU` (`REACTION_NODES`, `REACTION_AT`). Sauvegarde de la timeline d'avant : `GR_Office_Evening.before_react.lsf` (scratchpad).
+
+### 20/11 : transition et retour au camp (version 1.0.0.16)
+
+- Transition arrivée → soirée (vidéo du 20/11, depuis le camp) : le script retirait l'écran noir dès le lancement de la soirée, mais le dialogue met un moment à s'afficher. L'interface du jeu (et l'inventaire resté ouvert) apparaissait environ 0,6 s. Le noir est maintenant retiré 0,8 s après `DialogStarted` de la soirée.
+- Le nom du lieu (« Forteresse du roc du dracosir ») s'affiche à la fin de la cinématique quand on vient du camp : le jeu l'affiche en arrivant dans la zone, pas encore traité.
+- Après la soirée, fondu au noir puis retour au camp avec la procédure du bouton « Aller au camp » (`PROC_TeleportToFromCamp`, `GLO_Camp`). L'image revient à l'arrivée (`TeleportedToCamp`), ou au bout de 20 s.
+- Version **1.0.0.16** : Build **16** dans le Multitool, puis BG3ModManager (Refresh, Save, Export).
