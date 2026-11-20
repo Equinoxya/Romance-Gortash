@@ -186,6 +186,9 @@ def check_animation_durations():
                 node = stack.pop(); stack += node.children
                 src = node.attr('SourceFile') if node.name == 'Resource' else None
                 if src and src.lower().endswith('.gr2') and node.attr('Duration') is not None:
+                    if not src.startswith(f'Public/{MOD}/'):   # the game's own file (ball_waltz.py)
+                        print(f'anim       {node.attr("Name")}: game file {src.rsplit("/", 1)[-1]}, not checked')
+                        continue
                     anims.append((node.attr('Name'), node.attr('Duration'), os.path.join(OUT, *src.split('/'))))
     if not anims:
         return
