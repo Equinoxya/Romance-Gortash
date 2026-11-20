@@ -1378,7 +1378,7 @@ You talk as though you know me.
 **N3a** - Gortash
 
 ```
-Someone with priorities. Good. Sit. It's a Tethyrian red, older than my ambitions, though not by much.
+Someone with priorities. Good. That glass is yours. A Tethyrian red, older than my ambitions, though not by much.
 ```
 
 **N3b** - Gortash
@@ -1390,7 +1390,7 @@ Straight to the ledger. I respect that. What I want, tonight, is one hour in whi
 **N3c** - Gortash - three identical nodes, one per identity
 
 ```
-Neither. I have simply calculated that you are more interesting alive and unthreatened. Do sit down, you're making the furniture nervous.
+Neither. I have simply calculated that you are more interesting alive and unthreatened. Do stop looking for the exits, you're making the furniture nervous.
 ```
 
 **N3d** - Gortash

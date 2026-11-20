@@ -77,16 +77,16 @@ End of dialogue. Nothing is set, so the letter offers the choice again.
 | A4 | `[Durge]` | You talk as though you know me. | Vous parlez comme si vous me connaissiez. | N3d |
 
 **N3a - Gortash**
-- EN: Someone with priorities. Good. Sit. It's a Tethyrian red, older than my ambitions, though not by much.
-- FR: Quelqu'un qui a le sens des priorités. Bien. Asseyez-vous. C'est un rouge du Téthyr, plus vieux que mes ambitions, mais de peu.
+- EN: Someone with priorities. Good. That glass is yours. A Tethyrian red, older than my ambitions, though not by much.
+- FR: Quelqu'un qui a le sens des priorités. Bien. Ce verre-là est pour vous. Un rouge du Téthyr, plus vieux que mes ambitions, mais de peu.
 
 **N3b - Gortash**
 - EN: Straight to the ledger. I respect that. What I want, tonight, is one hour in which nobody asks me to sign anything. And your company. I have been curious about it for longer than I care to admit.
 - FR: Droit au but. J'apprécie. Ce que je veux, ce soir, c'est une heure où personne ne me demande de signer quoi que ce soit. Et votre compagnie. Elle m'intrigue depuis plus longtemps que je ne voudrais l'admettre.
 
 **N3c - Gortash**
-- EN: Neither. I have simply calculated that you are more interesting alive and unthreatened. Do sit down, you're making the furniture nervous.
-- FR: Ni l'un ni l'autre. J'ai simplement calculé que vous [étiez plus intéressant / étiez plus intéressante / aviez plus d'intérêt] en vie et sans menace. Asseyez-vous donc, vous rendez les meubles nerveux.
+- EN: Neither. I have simply calculated that you are more interesting alive and unthreatened. Do stop looking for the exits, you're making the furniture nervous.
+- FR: Ni l'un ni l'autre. J'ai simplement calculé que vous [étiez plus intéressant / étiez plus intéressante / aviez plus d'intérêt] en vie et sans menace. Cessez donc de chercher les sorties, vous rendez les meubles nerveux.
 
 **N3d - Gortash** `[Durge]`
 - EN: I knew you better than anyone alive. We built all of this together, you and I, across a table much like this one. You were the only one in the room I never had to explain myself to. I have missed that more than I expected.

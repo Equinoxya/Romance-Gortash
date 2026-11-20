@@ -289,7 +289,7 @@ Variant `all`: one text for everyone. Variants `M`, `F`, `NB`: three texts on th
 | A2 | Player | all | `h3cd3babdgaeb8g5379ga136gf7ca9554eac5` | What do you want, Gortash? |
 | A3 | Player | all | `h5a9319dag11cdg5f98g97d8g4945feb394cb` | An Archduke with no guards in the room. Either you trust ... |
 | A4 | Player | all | `h25914b0fg090cg50e2g84dcg9ee1cc4c49fc` | You talk as though you know me. |
-| N3a | Gortash | all | `h923dd3e2gb6deg5620gbc59gaba7ff503bf6` | Someone with priorities. Good. Sit. It's a Tethyrian red,... |
+| N3a | Gortash | all | `h923dd3e2gb6deg5620gbc59gaba7ff503bf6` | Someone with priorities. Good. That glass is yours. A Tet... |
 | N3b | Gortash | all | `h361f09cbg92b8g5819ga092ge1d5b61541ba` | Straight to the ledger. I respect that. What I want, toni... |
 | N3c | Gortash | M | `hfec3f3abg8129g5f53gadb7g10111cd714c0` | Neither. I have simply calculated that you are more inter... |
 | N3c | Gortash | F | `hc2d4914cg770dg5633ga9fbg37006fece9f9` | Neither. I have simply calculated that you are more inter... |
