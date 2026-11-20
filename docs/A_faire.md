@@ -293,4 +293,4 @@ Juste après la prise de main (choix C1, phase N9a), Gortash lève la main de la
 - Transition arrivée → soirée (vidéo du 20/11, depuis le camp) : le script retirait l'écran noir dès le lancement de la soirée, mais le dialogue met un moment à s'afficher. L'interface du jeu (et l'inventaire resté ouvert) apparaissait environ 0,6 s. Le noir est maintenant retiré 0,8 s après `DialogStarted` de la soirée.
 - Le nom du lieu (« Forteresse du roc du dracosir ») s'affiche à la fin de la cinématique quand on vient du camp : le jeu l'affiche en arrivant dans la zone, pas encore traité.
 - Après la soirée, fondu au noir puis retour au camp avec la procédure du bouton « Aller au camp » (`PROC_TeleportToFromCamp`, `GLO_Camp`). L'image revient à l'arrivée (`TeleportedToCamp`), ou au bout de 20 s.
-- Version **1.0.0.16** : Build **16** dans le Multitool, puis BG3ModManager (Refresh, Save, Export).
+- Version **1.0.0.21** : Build **21** (le Multitool était déjà à 20) dans le Multitool, puis BG3ModManager (Refresh, Save, Export).
