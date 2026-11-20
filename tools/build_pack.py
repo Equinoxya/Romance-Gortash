@@ -120,6 +120,16 @@ def main():
         if os.path.isfile(os.path.join(story, f)):
             os.remove(os.path.join(story, f))
     src_loca = os.path.join(DATA, 'Mods', MOD, 'Localization')
+    # The text source is the repository (Localization/<Language>/GortashRomance.loca.xml, written
+    # by build_loca.py). Copy it into the Toolkit project first: packing the Toolkit's own copy
+    # shipped stale text (game 20/11: the old letter name and text after the rewrite).
+    repo_loca = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Localization')
+    for lang in sorted(os.listdir(repo_loca)):
+        src = os.path.join(repo_loca, lang, 'GortashRomance.loca.xml')
+        if os.path.isfile(src):
+            os.makedirs(os.path.join(src_loca, lang), exist_ok=True)
+            shutil.copyfile(src, os.path.join(src_loca, lang, 'GortashRomance.loca.xml'))
+            print(f'loca       {lang}: text copied from the repository')
     for lang in sorted(os.listdir(src_loca)):
         d = os.path.join(src_loca, lang)
         if not os.path.isdir(d):

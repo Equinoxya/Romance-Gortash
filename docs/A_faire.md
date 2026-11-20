@@ -279,3 +279,8 @@ Juste après la prise de main (choix C1, phase N9a), Gortash lève la main de la
   - la joueuse est placée devant Gortash dès N6a, N6c et N6d (gros plans de Gortash), pour éviter le saut au début de N7. N6b n'est pas traité (autre caméra, `9b704794`).
 - Main tendue : le bras retombait un instant environ 1 s après le début du geste. `GR_HandOffer_IN` s'effaçait en 0,3 s et `GR_HandOffer_LOOP` mettait 0,3 s à apparaître, donc la pose de repos revenait entre les deux. Les deux fondus sont à 0 (les poses se raccordent à moins de 2° près), réglés dans `evening_hands.py`.
 - N7 réécrite (il ne s'avance plus) : « Il repose son verre. Vous êtes à présent assez près pour que… ». Le texte anglais du projet Toolkit est l'ancien : à recoller depuis `Toolkit/texts_to_paste.md` si la ligne est réimportée.
+
+### 20/11 : les textes n'arrivaient pas dans le jeu
+
+- `build_pack.py` empaquetait les textes du projet Toolkit (`Data/Mods/<mod>/Localization/<Langue>/*.xml`), pas ceux du dépôt écrits par `build_loca.py`. Toutes les modifications de texte depuis le 19/11 (lettre, N7, Gortash, petits noms, N9a) n'étaient donc pas dans le jeu. Corrigé : `build_pack.py` recopie d'abord `Localization/<Langue>/GortashRomance.loca.xml` du dépôt dans le projet Toolkit.
+- La lettre d'invitation de base (`04f0d615-…`, faite à la main dans le Toolkit) prenait son nom et sa description dans des textes du Toolkit (`hcf155da7…`, `h0899c053…`). Elle pointe maintenant vers `LETTER1_NAME` et `LETTER1_DESC` du dépôt. Sauvegarde du modèle d'avant dans le scratchpad (`04f0d615.before_handles.lsf`).
