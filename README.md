@@ -26,8 +26,8 @@ For Tav, this is a new romance. For the Dark Urge, it is a reunion: the two were
 
 | Step | Content | Status |
 |---|---|---|
-| 1 | Invitation letter delivered at camp after the coronation | In game. Text rewritten on 2026-11-19 (short, signed "E.") |
-| 2 | Evening in his office: flirt dialogue | In game, staged with a timeline and custom animations. Last fixes to test |
+| 1 | Invitation letter delivered at camp after the coronation | **Done** (2026-11-20): short letter signed "E." |
+| 2 | Evening in his office: flirt dialogue | **Done** (2026-11-20, v1.0.0.21): from camp to the office and back, staged with a timeline and custom animations |
 | 3 | Invitation card and ball with a dance | Draft in `Dialogs/GR_Ball.md`, awaiting review |
 | 4 | Second letter and private night (text, fade to black) | Draft in `Dialogs/GR_Private_Night.md`, awaiting review |
 | 5 | Ending where he survives (alliance + romance) | Draft in `Dialogs/GR_Ending.md`, awaiting review |
