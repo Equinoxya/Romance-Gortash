@@ -30,17 +30,16 @@ from build_toolkit import DATA, MOD, stable_uuid
 SCENE = 'GR_Ball'
 TL = os.path.join(DATA, 'Public', MOD, 'Timeline', 'Generated', SCENE + '.lsf')
 RES_DIR = os.path.join(DATA, 'Public', MOD, 'Content', 'Assets', '[PAK]_GR_Animations')
-WYLL = 'Public/SharedDev/Assets/Characters/_Anims/_Cinematic/Act03/CAMP/Wyll_InPartyEND/'
-DURATION = 28.6668
-ANIMS = {   # name -> (resource id, game .GR2, skeleton)
-    'GR_Waltz_Gortash': (stable_uuid('GR/anim/GR_Waltz_Gortash'),
-                         WYLL + 'HUM_M_Rig_SCENE_Wyll_InPartyEND_WyllWaltzKissTall_Wyll.GR2',
-                         '044ab023-7076-77e6-73c2-d0f26fca0776'),
-    'GR_Waltz_Joueuse': (stable_uuid('GR/anim/GR_Waltz_Joueuse'),
-                         WYLL + 'HUM_F_Rig/HUM_F_Rig_SCENE_Wyll_InPartyEND_WyllWaltzKissTall_PLYR.GR2',
-                         'edda91cd-d2be-3296-087c-45477f36daaa'),
-}
-APPROACH, DANCE, KISS, PART = (0.0, 3.5), (3.5, 13.0), (13.5, 21.0), (23.5, DURATION)
+# The game did not play an animation started from an offset (AnimationPlayStartOffset, game 20/11):
+# only the first 13 s of the waltz showed, then both stood still. So the waltz is cut into four
+# animations of our own, each starting at its first frame (GortashAnim/waltz_export.py, Blender):
+PARTS = {'In': 13.0, 'Dance': 9.5, 'Kiss': 7.5, 'Part': 5.167}   # durations, s
+# In: 0-13 s of the waltz (walk up, hand, slow dance); Dance: 3.5-13 s; Kiss: 13.5-21 s; Part: 23.5 s-end
+SKELETON = {'Gortash': '044ab023-7076-77e6-73c2-d0f26fca0776', 'Joueuse': 'edda91cd-d2be-3296-087c-45477f36daaa'}
+ANIMS = {f'GR_Waltz{p}_{h}': (stable_uuid(f'GR/anim/GR_Waltz{p}_{h}'),
+                              f'Public/{MOD}/Assets/Animations/GR_Waltz{p}_{h}.GR2', SKELETON[h], d)
+         for p, d in PARTS.items() for h in SKELETON}
+OLD = [stable_uuid('GR/anim/GR_Waltz_Gortash'), stable_uuid('GR/anim/GR_Waltz_Joueuse')]   # first version
 FADE = 0.6
 LINES = {   # line -> what of the waltz it shows
     'N9a': 'start', 'N9b': 'start', 'N9d': 'start',
@@ -73,9 +72,11 @@ def node(name, attrs=(), children=()):
 
 
 def write_resources():
-    """One animation resource per half, laid out like ours (GR_HandKiss_Gortash), pointing at the game's file."""
+    """One animation resource per part and half, laid out like ours (GR_HandKiss_Gortash)."""
     template = lsf.read(os.path.join(RES_DIR, '8357d7d4-ef4d-5769-a2c3-d5aa4d2d9349.lsf'))
-    for name, (rid, gr2, skeleton) in ANIMS.items():
+    for old in OLD:
+        if os.path.exists(os.path.join(RES_DIR, old + '.lsf')): os.remove(os.path.join(RES_DIR, old + '.lsf'))
+    for name, (rid, gr2, skeleton, duration) in ANIMS.items():
         d = template
         stack, res = list(d['regions']), None
         while stack and res is None:
@@ -83,28 +84,20 @@ def write_resources():
             if n.name == 'Resource': res = n
             stack += n.children
         vals = {'ID': rid, 'Name': name, 'SourceFile': gr2, 'Template': gr2[:-4] + '.Anim.0',
-                'Duration': DURATION, 'SkeletonResource': skeleton}
+                'Duration': duration, 'SkeletonResource': skeleton}
         res.attrs = [(a, t, vals.get(a, v)) for a, t, v in res.attrs]
         lsf.write(d, os.path.join(RES_DIR, rid + '.lsf'))
         print(f'resource   {name} -> {rid}')
 
 
 def pieces(kind, s, e):
-    """[(start, end, offset)] covering the phase s..e."""
-    out, t = [], s
-    if kind == 'start':
-        first = min(e, s + (DANCE[1] - APPROACH[0]))
-        out.append((s, first, 0.0)); t = first
-        kind = 'dance'
-    if kind == 'kiss':
-        return [(s, min(e, s + KISS[1] - KISS[0]), KISS[0])] + ([(s + KISS[1] - KISS[0], e, KISS[1])] if e > s + KISS[1] - KISS[0] else [])
-    if kind == 'part':
-        return [(s, e, PART[0])]
-    span = DANCE[1] - DANCE[0]
+    """[(start, end, part)] covering the phase s..e, each part played from its first frame."""
+    first = {'start': 'In', 'dance': 'Dance', 'kiss': 'Kiss', 'part': 'Part'}[kind]
+    out, t, part = [], s, first
     while t < e - 0.05:
-        end = min(e, t + span)
-        out.append((t, end, DANCE[0]))
-        t = end
+        end = min(e, t + PARTS[part])
+        out.append((t, end, part)); t = end
+        part = 'Dance' if kind != 'part' else 'Part'
     return out
 
 
@@ -143,12 +136,11 @@ def main():
         if i is None:
             continue
         s, e = starts[i]
-        for k, (a, b, off) in enumerate(pieces(kind, s, e)):
-            for who, actor, name in (('G', gortash, 'GR_Waltz_Gortash'), ('P', player, 'GR_Waltz_Joueuse')):
+        for k, (a, b, part) in enumerate(pieces(kind, s, e)):
+            for who, actor, name in (('G', gortash, f'GR_Waltz{part}_Gortash'), ('P', player, f'GR_Waltz{part}_Joueuse')):
                 attrs = [('Type', 'LSString', 'TLAnimation'), ('ID', 'guid', nid(f'{who}{i}.{k}')),
                          ('StartTime', 'float', round(a, 3)), ('EndTime', 'float', round(b, 3)),
                          ('PhaseIndex', 'int32', i), ('AnimationSourceId', 'guid', ANIMS[name][0])]
-                if off: attrs.append(('AnimationPlayStartOffset', 'double', off))
                 attrs += [('FadeIn', 'double', FADE if (k or kind != 'start') else 0.3),
                           ('FadeOut', 'double', FADE), ('AnimationGroup', 'guid', group[who])]
                 comps.children.append(node('EffectComponent', attrs, [node('Actor', [('UUID', 'guid', actor)])]))
